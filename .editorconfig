@@ -87,3 +87,5 @@ dotnet_naming_rule.most_identifiers_should_be_pascal_case.severity=suggestion
 ##########
 [*.md]
 guidelines = 100
+
+spelling_exclusion_path = .\exclusion.dic

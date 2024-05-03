@@ -2,8 +2,9 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Objects;
 
-namespace NermNermNerm.Junimatic
+namespace StardewValleyMods.JojaFinancial
 {
     public class ModEntry
         : Mod, ISimpleLog
@@ -11,14 +12,22 @@ namespace NermNermNerm.Junimatic
         private const string StartLoanEventCommand = "JojaFinance.StartLoan";
         private const string MorrisOffersLoanEvent = "JojaFinance.MorrisOffer";
 
-        public ModEntry()
-        {
-        }
+        public const int AutopayDay = 17;
+
+        public const int PaymentDeadline = 21;
+
+        // `ShippingMenu` might be the class to subclass/harmony patch for showing autopay.
+        //  (Per 'Esca' in Discord)
+
+        public Loan Loan { get; } = new Loan();
 
         public override void Entry(IModHelper helper)
         {
             this.Helper.Events.Content.AssetRequested += this.OnAssetRequested;
             Event.RegisterCommand(StartLoanEventCommand, this.StartLoan);
+
+            Phone.PhoneHandlers.Add(new JojaPhoneHandler(this));
+            this.Loan.Entry(this);
         }
 
         private void StartLoan(Event @event, string[] args, EventContext context)

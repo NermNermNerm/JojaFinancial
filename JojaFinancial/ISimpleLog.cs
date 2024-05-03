@@ -1,6 +1,6 @@
 using StardewModdingAPI;
 
-namespace NermNermNerm.Junimatic
+namespace StardewValleyMods.JojaFinancial
 {
     /// <summary>
     ///   Objects within a mod should implement this interface to make it easier to report events to the
