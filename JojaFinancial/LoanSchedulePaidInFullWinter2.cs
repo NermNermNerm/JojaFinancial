@@ -11,9 +11,9 @@ namespace StardewValleyMods.JojaFinancial
     {
         private readonly static double[] percentageByMonth = [0, 0, .05, .1, .15, .3, .5, 1];
 
-        public double GetInterestRate(int currentMonth)
+        public double GetInterestRate(int seasonsSinceLoanOrigination)
         {
-            return .02;
+            return seasonsSinceLoanOrigination > 0 ? .02 : 0;
         }
 
         public int GetLoanOriginationFeeAmount(int loanAmount) => 5000;

@@ -12,22 +12,31 @@ namespace StardewValleyMods.JojaFinancial
         private const string StartLoanEventCommand = "JojaFinance.StartLoan";
         private const string MorrisOffersLoanEvent = "JojaFinance.MorrisOffer";
 
-        public const int AutopayDay = 17;
-
-        public const int PaymentDeadline = 21;
 
         // `ShippingMenu` might be the class to subclass/harmony patch for showing autopay.
         //  (Per 'Esca' in Discord)
 
-        public Loan Loan { get; } = new Loan();
+        public Loan Loan { get; }
+
+        protected JojaPhoneHandler PhoneHandler { get; }
+
+        public ModEntry()
+            : this(new Loan(), new JojaPhoneHandler())
+        { }
+
+        public ModEntry(Loan loan, JojaPhoneHandler phoneHandler)
+        {
+            this.Loan = loan;
+            this.PhoneHandler = phoneHandler;
+        }
 
         public override void Entry(IModHelper helper)
         {
             this.Helper.Events.Content.AssetRequested += this.OnAssetRequested;
             Event.RegisterCommand(StartLoanEventCommand, this.StartLoan);
 
-            Phone.PhoneHandlers.Add(new JojaPhoneHandler(this));
             this.Loan.Entry(this);
+            this.PhoneHandler.Entry(this);
         }
 
         private void StartLoan(Event @event, string[] args, EventContext context)
@@ -70,7 +79,7 @@ quickQuestion #Morris, I am so ready to start living my dream!#Ermm..  I need ti
 faceDirection Morris 1
 pause 200
 faceDirection Morris 0
-speak Morris ""Once again, Welcome to Stardew Valley and we look forward to seeing you at your local neighborhood Jojamart!""
+speak Morris ""Once again, Welcome to Stardew Valley and we look forward to seeing you at your local neighborhood JojaMart!""
 pause 200
 faceDirection Morris 1
 end fade
