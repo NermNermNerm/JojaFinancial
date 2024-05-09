@@ -142,7 +142,7 @@ namespace StardewValleyMods.JojaFinancial
             string message =
                 "Hey, just a quick second here to let you know that our buyers scour the earth for great deals that "
                 + $"we can share with you. {chosenName}, our AI-backed sales team has picked a special deal, just for you. "
-                + $"We are prepared to offer you {thingToSell.Stack} {thingToSell.Name}'s at the extra special, discounted "
+                + $"We are prepared to offer you {thingToSell.Stack} {thingToSell.Name} at the extra special, discounted "
                 + $"price of {salesPrice}g.";
             this.PhoneDialog(message, [
                 new PhoneMenuItem("I'll take it!", () => this.HandleOneBornEveryMinute(chosenName, thingToSell, salesPrice)),
@@ -168,6 +168,8 @@ namespace StardewValleyMods.JojaFinancial
 
         public void HandleHardSell(string chosenName, StardewValley.Object item, int salesPrice)
         {
+            // Maybe randomize the messages?
+            //   "Are you sure?  Next-day shipping is included at no extra charge!"
             this.PhoneDialog(
                 "Are you sure?  You know that buying stuff you don't need at inflated prices is a great way to boost your credit score!",
                 new PhoneMenuItem("Well, okay, if it'll boost my credit score...", () => this.HandleOneBornEveryMinute(chosenName, item, salesPrice)),
