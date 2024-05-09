@@ -2,14 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Extensions;
+using StardewValley.GameData.Objects;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Objects;
 
 namespace StardewValleyMods.JojaFinancial
 {
     public class JojaPhoneHandler
-        : IPhoneHandler
+        : IPhoneHandler, ISimpleLog
     {
         private ModEntry mod = null!;
 
@@ -42,6 +46,9 @@ namespace StardewValleyMods.JojaFinancial
             return false;
         }
 
+        // TODO: make this configurable
+        public bool GivePlayerTheRunAround => true;
+
         public bool TryHandleOutgoingCall(string callId)
         {
             if (callId != JojaFinancialOutgoingPhone) return false;
@@ -51,15 +58,123 @@ namespace StardewValleyMods.JojaFinancial
             DelayedAction.functionAfterDelay(delegate
             {
                 Game1.playSound("bigSelect");
-                this.PhoneDialog("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!", () => this.MainMenu("How can we help you today?"));
+                if (this.GivePlayerTheRunAround)
+                {
+                    this.PhoneDialog("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!#$b#This call may be monitored for training and quality purposes.", () => this.RigmaroleMenu());
+                }
+                else
+                {
+                    this.PhoneDialog("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!", () => this.MainMenu("How can we help you today?"));
+                }
             }, 4950);
 
             return true;
         }
 
+
+
         public record PhoneMenuItem(string Response, Action Action);
 
-        public void MainMenu(string message) // public for test access.
+        private static string[] Names = [
+            "Elvis Aaron Presley",
+            "King Leopold II",
+            "George Foreman",
+            "Judith Sheindlin",
+            "Nipsy Russell",
+            "Janet Reno",
+            "The Right Honourable Viscount Nelson",
+            "Wilma Flintstone",
+            "James T. Kirk",
+            "Tina Turner",
+            "Beverly Crusher",
+            "Patsy Stone",
+            "Bruce Lee",
+            "Detective Lennie Briscoe"
+        ];
+
+        public void RigmaroleMenu()
+        {
+            var actions = Names
+                .OrderBy(x => Game1.random.Next())
+                .Take(3)
+                .Append($"Farmer {Game1.player.Name}")
+                .Select(x => new PhoneMenuItem(x, () => this.HaveIGotADealForYou(x)))
+                .ToArray();
+            this.PhoneDialog("In order to server you better, please give us your name:", actions);
+        }
+
+        private static readonly string[] RandomSaleItems = [
+            "208", // glazed yams
+            "16",  // Wild horseradish
+            "24",  // parsnip
+            "78",  // Cave Carrot
+            "88",  // Coconut
+            "92",  // Sap
+            "136", // Largemouth Bass
+            "142", // Carp
+            "153", // Green Algae
+            "167", // Joja Cola
+            "231", // Eggplant Parmesan
+            "271", // Unmilled rice
+            "306", // Mayonnaise
+            "456", // Algae Soup
+            "731", // Maple Bar
+            "874", // Bug Steak
+        ];
+
+        public void HaveIGotADealForYou(string chosenName)
+        {
+            StardewValley.Object? thingToSell = null;
+            do
+            {
+                string item = Game1.random.Choose(RandomSaleItems);
+                thingToSell = ItemRegistry.Create<StardewValley.Object>(item, Game1.random.Next(20));
+                if (thingToSell is null)
+                {
+                    this.LogError($"Bad random item {item} - not able to create it.");
+                }
+                else if (thingToSell.Price <= 0)
+                {
+                    this.LogError($"Bad random item {item}'s price is {thingToSell.Price}.");
+                }
+            } while (thingToSell is null || thingToSell.Price <= 0);
+            int salesPrice = (int)(thingToSell.Stack * thingToSell.Price * 2.11); // randomize the number a bit
+            string message =
+                "Hey, just a quick second here to let you know that our buyers scour the earth for great deals that "
+                + $"we can share with you. {chosenName}, our AI-backed sales team has picked a special deal, just for you. "
+                + $"We are prepared to offer you {thingToSell.Stack} {thingToSell.Name}'s at the extra special, discounted "
+                + $"price of {salesPrice}g.";
+            this.PhoneDialog(message, [
+                new PhoneMenuItem("I'll take it!", () => this.HandleOneBornEveryMinute(chosenName, thingToSell, salesPrice)),
+                new PhoneMenuItem("No Thanks!", () => this.HandleHardSell(chosenName, thingToSell, salesPrice)),
+            ]);
+        }
+
+        public void HandleOneBornEveryMinute(string chosenName, StardewValley.Object item, int salesPrice)
+        {
+            if (Game1.player.Money >= salesPrice)
+            {
+                Game1.player.Money -= salesPrice;
+                this.mod.GeneratedMail.SendMail("jojaSale", $"Your {item.Name} from JojaFinancial",
+                    "Here's your special purchase from JojaFinancial's Super-Helpful Automated Phone System!  We're so glad our AI predicted your needs so well!",
+                    (item.QualifiedItemId, item.Stack));
+                this.MainMenu($"Processing...#$b#{chosenName}, your {item.Name} is on its way!  JojaCorp appreciates your business!#$b#Is there anything else I can help you with?");
+            }
+            else
+            {
+                this.MainMenu($"Processing...#$b#{chosenName}, I'm sorry to tell you that your bank declined the transaction citing insufficient funds!  Please come back when your credit situation improves!#$b#Is there anything else I can help you with?");
+            }
+        }
+
+        public void HandleHardSell(string chosenName, StardewValley.Object item, int salesPrice)
+        {
+            this.PhoneDialog(
+                "Are you sure?  You know that buying stuff you don't need at inflated prices is a great way to boost your credit score!",
+                new PhoneMenuItem("Well, okay, if it'll boost my credit score...", () => this.HandleOneBornEveryMinute(chosenName, item, salesPrice)),
+                new PhoneMenuItem("Yes, quit asking!", () => this.MainMenu("Okay, but if you change your mind, call us back!  Now, how else can we help you today?")));
+        }
+
+        public void MainMenu(string message)
         {
             if (this.mod.Loan.IsLoanUnderway)
             {
@@ -71,9 +186,7 @@ namespace StardewValleyMods.JojaFinancial
             }
             else if (this.mod.Loan.IsPaidOff)
             {
-                this.PhoneDialog(message, [
-                    // TODO: Maybe add review special offers item?
-                ]);
+                this.PhoneDialog("I'm sorry, but we have no more loan opportunities to offer you at this time.  But keep calling back for our special offers!", () => { });
             }
             else
             {
@@ -94,15 +207,25 @@ namespace StardewValleyMods.JojaFinancial
 
         protected virtual void PhoneDialog(string message, params PhoneMenuItem[] menuItems)
         {
-            // The "JojaFinanceResponse" string doesn't seem to be important at all.
-            var responsesPlusHangUp = menuItems.Select(i => new Response("JojaFinanceResponse", i.Response)).Union(new Response[] {
-                new Response("HangUp", Game1.content.LoadString("Strings\\Characters:Phone_HangUp"))
-            }).ToArray();
-            var actionsPlusHangUp = menuItems.Select(i => i.Action).Union(new Action[] { () => { } }).ToArray();
-
-            var dialog = new DialogueAndAction(message, responsesPlusHangUp, actionsPlusHangUp, this.mod.Helper.Input);
-            // dialog.overridePortrait = mod.Helper.GameContent.Load<Texture2D>("Portraits\\AnsweringMachine");
-            Game1.activeClickableMenu = new DialogueAndAction("How can we help you today?", responsesPlusHangUp, actionsPlusHangUp, this.mod.Helper.Input);
+            // The PhoneDialog without the menu uses the 'Dialogue' class, which supports multipart messages, while
+            //  this one does not.  So we'll do some shenanigans to give it consistent behavior.  Maybe.
+            int multipartIndex = message.LastIndexOf("#$b#");
+            if (multipartIndex > 0)
+            {
+                string introPart = message.Substring(0, multipartIndex);
+                string menuPart = message.Substring(multipartIndex + "#$b#".Length);
+                this.PhoneDialog(introPart, () => this.PhoneDialog(menuPart, menuItems));
+            }
+            else
+            {
+                // The "JojaFinanceResponse" string doesn't seem to be important at all.
+                var responsesPlusHangUp = menuItems
+                    .Select(i => new Response("JojaFinanceResponse", i.Response))
+                    .Append(new Response("HangUp", Game1.content.LoadString("Strings\\Characters:Phone_HangUp")))
+                    .ToArray();
+                var actionsPlusHangUp = menuItems.Select(i => i.Action).Append(() => {}).ToArray();
+                Game1.activeClickableMenu = new DialogueAndAction(message, responsesPlusHangUp, actionsPlusHangUp, this.mod.Helper.Input);
+            }
         }
 
         private void HandleGetLoanTerms()
@@ -134,15 +257,22 @@ namespace StardewValleyMods.JojaFinancial
 
         public void HandleMakePayment(int amount)
         {
-            this.PhoneDialog("Processing...", () =>
+            if (amount == 0)
             {
-                string message = this.mod.Loan.TryMakePayment(amount)
-                    ? (this.mod.Loan.IsPaidOff
-                        ? "Thank you!  Your loan is fully repaid!  You and JojaCorp thrive together!  Is there anything else we can do for you today?"
-                        : "Thank you for making your payment!  Is there anything else we can do for you today?")
-                    : "I'm sorry, but your bank declined the request citing insufficient funds.  Is there anything else we can do for you today?";
-                this.MainMenu(message);
-            });
+                this.MainMenu("There's no need to pay at this point - you owe nothing right now.");
+            }
+            else
+            {
+                this.PhoneDialog("Processing...", () =>
+                {
+                    string message = this.mod.Loan.TryMakePayment(amount)
+                        ? (this.mod.Loan.IsPaidOff
+                            ? "Thank you!  Your loan is fully repaid!  You and JojaCorp thrive together!  Is there anything else we can do for you today?"
+                            : "Thank you for making your payment!  Is there anything else we can do for you today?")
+                        : "I'm sorry, but your bank declined the request citing insufficient funds.  Is there anything else we can do for you today?";
+                    this.MainMenu(message);
+                });
+            }
         }
 
         public void HandleSetupAutoPay()
@@ -151,7 +281,13 @@ namespace StardewValleyMods.JojaFinancial
             string message = this.mod.Loan.IsOnAutoPay
                 ? $"Thank you for taking advantage of AutoPay - remember to have sufficient funds in your account by day {Loan.AutoPayDayOfSeason} of each season to cover the minimum payment."
                 : $"Auto-Pay has been turned off for your account.  Remember to call the Super-Helpful(tm) automated phone system by day {Loan.PaymentDueDayOfSeason} of each season to make your seasonal payment.";
+            message += " Is there anything else I can help you with?";
             this.MainMenu(message);
+        }
+
+        public void WriteToLog(string message, LogLevel level, bool isOnceOnly)
+        {
+            ((ISimpleLog)this.mod).WriteToLog(message, level, isOnceOnly);
         }
     }
 }

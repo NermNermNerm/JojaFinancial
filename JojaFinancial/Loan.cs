@@ -116,7 +116,7 @@ namespace StardewValleyMods.JojaFinancial
         public bool IsOnAutoPay
         {
             get => this.GetPlayerModDataValueRaw(IsOnAutoPayModKey) is not null;
-            set => this.SetPlayerModDataValueRaw(IsOnAutoPayModKey, true.ToString(CultureInfo.InvariantCulture));
+            set => this.SetPlayerModDataValueRaw(IsOnAutoPayModKey, value ? true.ToString(CultureInfo.InvariantCulture) : null);
         }
 
         private void AssessLateFee()
