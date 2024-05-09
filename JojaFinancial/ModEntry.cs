@@ -17,6 +17,7 @@ namespace StardewValleyMods.JojaFinancial
         //  (Per 'Esca' in Discord)
 
         public Loan Loan { get; }
+        public GeneratedMail GeneratedMail { get; }
 
         protected JojaPhoneHandler PhoneHandler { get; }
 
@@ -28,6 +29,7 @@ namespace StardewValleyMods.JojaFinancial
         {
             this.Loan = loan;
             this.PhoneHandler = phoneHandler;
+            this.GeneratedMail = new GeneratedMail();
         }
 
         public override void Entry(IModHelper helper)
@@ -37,6 +39,7 @@ namespace StardewValleyMods.JojaFinancial
 
             this.Loan.Entry(this);
             this.PhoneHandler.Entry(this);
+            this.GeneratedMail.Entry(this);
         }
 
         private void StartLoan(Event @event, string[] args, EventContext context)

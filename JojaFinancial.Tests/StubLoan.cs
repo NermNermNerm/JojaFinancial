@@ -85,7 +85,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             set => this.StubHelper.Game1PlayerMoney = value;
         }
 
-        protected override void SendMail(string idPrefix, string synopsis, string message)
+        protected override void SendMail(string idPrefix, string synopsis, string message, params string[] attachedItemQiids)
         {
             this.SentMail.Add(new MailItem(idPrefix, synopsis, message, this.Game1Date));
         }

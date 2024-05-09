@@ -78,7 +78,7 @@ namespace StardewValleyMods.JojaFinancial
             else
             {
                 this.PhoneDialog(message, [
-                    new PhoneMenuItem("Get a Loan Prospectus", this.HandleGetProspectus),
+                    new PhoneMenuItem("Get the loan terms", this.HandleGetLoanTerms),
                     new PhoneMenuItem("Start the loan", this.HandleStartTheLoan),
                 ]);
             }
@@ -105,7 +105,7 @@ namespace StardewValleyMods.JojaFinancial
             Game1.activeClickableMenu = new DialogueAndAction("How can we help you today?", responsesPlusHangUp, actionsPlusHangUp, this.mod.Helper.Input);
         }
 
-        private void HandleGetProspectus()
+        private void HandleGetLoanTerms()
         {
             this.mod.Loan.SendMailLoanTerms();
             this.PhoneDialog($"Great!  I just mailed to you the loan terms, you should have them tomorrow morning!  Call us back before the end of the month to lock in these low rates!",

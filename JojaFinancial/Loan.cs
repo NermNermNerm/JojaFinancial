@@ -227,7 +227,7 @@ Your payment of {amountPaid} was processed on {this.Game1Date.Localize()}.");
         private void SendMailAutoPayFailed(int amountOwed)
         {
             this.SendMail("autopay", "Auto-pay Failed!", $@"ALERT!  Your JojaFinancial Loan Automatic Payment of {amountOwed}g did not go through!
-In order to avoid a penalty fee and possible interest rate increases, pay this amount by calling the Super-Helpful JojaFinancial Phone System(tm) on or before the {PaymentDueDayString} of this month.");
+In order to avoid a penalty fee and possible interest rate increases, pay this amount by calling JojaFinancial's Super-Helpful Phone Assistant(tm) on or before the {PaymentDueDayString} of this month.");
         }
 
         private void SendMailMissedPayment()
@@ -241,16 +241,22 @@ In order to avoid a penalty fee and possible interest rate increases, pay this a
             int loanAmount = 220000; // TODO: Figure out the list price of the furniture and wallpaper catalogs from game data.
 
             var messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine(@"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
-It features a payment system structured to your rise to financial security.  Sure, if your rosy view of the future doesn't end up coming
-to pass, it'll load you up with soul-crushing debt.  But that's your fault for going into a field where you're actually trying to make something of
-value instead of finance where you can sell dreams!  Our loan comes with a low 2%/season interest rate and while there are some
-fees we have to charge in order to bring this wonderful opportunity to you, they're rolled into the loan to allow us to give you two seasons with
-ZERO PAYMENTS!");
-            messageBuilder.AppendLine();
-            messageBuilder.AppendLine(@"There's a whole bunch of fine print below that you should definitely read.  If you do, we'll work harder
-in the future to make it even longer and finer so you won't next time.  What you really want to do now is call up the Super-Helpful phone assistant
-and kick off this loan to bring yourself the comforts of tomorrow today!");
+            messageBuilder.AppendLine(
+@"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
+Call the Joja Super-Helpful Phone Assistant today to get your life of comfort in the mail tomorrow with no up-front fees,
+no down-payment, no payments at all for the first two seasons, and no interest for the first season!
+
+The JojaFinancial furniture loan features a payment system structured to your rise to financial security.
+Sure, if your rosy view of the future doesn't end up coming to pass, it'll load you up with soul-crushing debt.
+But that's your fault for going into a field where you're actually trying to make something of value instead
+of finance where you sell dreams!  Our loan comes with a low 2%/season interest rate and while there are
+some fees we have to charge in order to bring this wonderful opportunity to you, they're rolled into the loan
+to allow us to give you two seasons with ZERO PAYMENTS!
+
+There's a whole bunch of fine print below that you should definitely read.  If you do, please tell us and
+we'll work harder in the future to make it even longer and finer so you won't next time.  What you really
+want to do now is call up the Super-Helpful Phone Assistant and kick off this loan to bring yourself the
+comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n", " ").Replace("||", "\n\n"));
             messageBuilder.AppendLine();
 
             string seasonAndYear(WorldDate date) => $"{date.Season} of year {date.Year}";
@@ -310,17 +316,22 @@ and kick off this loan to bring yourself the comforts of tomorrow today!");
 
         private void SendWelcomeMail()
         {
-            // TODO: need to attach the catalogs.  Probably need one mail per item
-            this.SendMail("welcome", "Tour Furniture Catalog", "JojaFinancial is happy to send you on your way to luxury living the no-money-down way!");
-        }
+            this.SendMail(
+                "welcome",
+                "Your Furniture Catalog",
+                @"JojaFinancial is so pleased that you have taken your first steps towards comfortable living and a solid credit rating!  Watch your mail in the coming months for reminders about making your EZ Payments later on this year.
 
+                - the JojaFinancial Team",
+                "(F)1226",
+                "(F)1308");
+        }
 
         // Possibly allow a refinance to different terms at some point.
         private ILoanSchedule Schedule => new LoanSchedulePaidInFullWinter2();
 
-        protected virtual void SendMail(string idPrefix, string synopsis, string message)
+        protected virtual void SendMail(string idPrefix, string synopsis, string message, params string[] attachedItemQiids)
         {
-            this.LogInfo($"SendMail({idPrefix}):\r\n{message}");
+            this.Mod.GeneratedMail.SendMail(idPrefix, synopsis, message, attachedItemQiids);
         }
 
         protected virtual WorldDate Game1Date => Game1.Date;
