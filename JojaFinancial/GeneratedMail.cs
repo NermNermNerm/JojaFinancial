@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
 using StardewModdingAPI;
 using StardewValley;
 
@@ -11,15 +7,15 @@ namespace StardewValleyMods.JojaFinancial
 {
     public class GeneratedMail : ISimpleLog
     {
-        private ModEntry mod = null!;
+        public ModEntry Mod { get; private set; } = null!;
 
         private const string MailModDataPrefix = "JojaFinancial.Mail.";
 
         public void Entry(ModEntry mod)
         {
-            this.mod = mod;
+            this.Mod = mod;
 
-            this.mod.Helper.Events.Content.AssetRequested += this.Content_AssetRequested;
+            this.Mod.Helper.Events.Content.AssetRequested += this.Content_AssetRequested;
         }
 
         private void Content_AssetRequested(object? sender, StardewModdingAPI.Events.AssetRequestedEventArgs e)
@@ -45,18 +41,18 @@ namespace StardewValleyMods.JojaFinancial
             }
         }
 
-        public virtual void SendMail(string idPrefix, string synopsis, string message, params (string qiid, int count)[] attachedItemQiids)
+        public virtual void SendMail(string idPrefix, string synopsis, string message, params (string qiid, int count)[] attachedItems)
         {
             string mailKey = $"{idPrefix}.{Game1.Date.Year}.{Game1.Date.SeasonIndex}.{Game1.Date.DayOfMonth}";
             string value = message.Replace("\r", "").Replace("\n", "^");
 
-            foreach (var pair in attachedItemQiids)
+            foreach (var pair in attachedItems)
             {
                 value += $"%item id {pair.qiid} {pair.count}%%";
             }
             value += "[#]" + synopsis;
             Game1.player.modData[$"{MailModDataPrefix}.{mailKey}"] = value;
-            this.mod.Helper.GameContent.InvalidateCache("Data/Mail");
+            this.Mod.Helper.GameContent.InvalidateCache("Data/Mail");
             Game1.player.mailForTomorrow.Add(mailKey);
         }
 
@@ -67,7 +63,7 @@ namespace StardewValleyMods.JojaFinancial
 
         public void WriteToLog(string message, LogLevel level, bool isOnceOnly)
         {
-            this.mod.WriteToLog(message, level, isOnceOnly);
+            this.Mod.WriteToLog(message, level, isOnceOnly);
         }
     }
 }

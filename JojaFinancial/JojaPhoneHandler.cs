@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -20,8 +21,6 @@ namespace StardewValleyMods.JojaFinancial
         private const string JojaFinancialOutgoingPhone = "JojaFinancial.CallCenter";
 
         // TODO: Add much more spam to the opening.
-        // TODO: Add a monthly "special offer" of some random crap item.
-        //    When you tell it no, it says "Are you sure?  Buying stuff you don't really need is a great way to boost your credit score!"
 
         public void Entry(ModEntry mod)
         {
@@ -49,6 +48,7 @@ namespace StardewValleyMods.JojaFinancial
         // TODO: make this configurable
         public bool GivePlayerTheRunAround => true;
 
+        [ExcludeFromCodeCoverage]
         public bool TryHandleOutgoingCall(string callId)
         {
             if (callId != JojaFinancialOutgoingPhone) return false;
@@ -97,7 +97,7 @@ namespace StardewValleyMods.JojaFinancial
             var actions = Names
                 .OrderBy(x => Game1.random.Next())
                 .Take(3)
-                .Append($"Farmer {Game1.player.Name}")
+                .Append($"Farmer {this.mod.Game1.PlayerName}")
                 .Select(x => new PhoneMenuItem(x, () => this.HaveIGotADealForYou(x)))
                 .ToArray();
             this.PhoneDialog("In order to server you better, please give us your name:", actions);
@@ -152,7 +152,7 @@ namespace StardewValleyMods.JojaFinancial
 
         public void HandleOneBornEveryMinute(string chosenName, StardewValley.Object item, int salesPrice)
         {
-            if (Game1.player.Money >= salesPrice)
+            if (this.mod.Game1.PlayerMoney >= salesPrice)
             {
                 Game1.player.Money -= salesPrice;
                 this.mod.GeneratedMail.SendMail("jojaSale", $"Your {item.Name} from JojaFinancial",

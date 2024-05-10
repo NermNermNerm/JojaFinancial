@@ -10,61 +10,6 @@ namespace JojaFinancial.Tests
     public class StubModHelper
         : IModHelper
     {
-        public Dictionary<string, string> ModData { get; } = new Dictionary<string, string>();
-        public WorldDate Game1Date = new WorldDate(1, Season.Spring, 1);
-
-        public int Game1PlayerMoney { get; set; }
-
-        public void AdvanceDay()
-        {
-            ((StubGameLoopEvents)this.Events.GameLoop).RaiseEndOfDay();
-
-            if (this.Game1Date.DayOfMonth < WorldDate.DaysPerMonth)
-            {
-                this.Game1Date.DayOfMonth += 1;
-            }
-            else
-            {
-                this.Game1Date.DayOfMonth = 1;
-                if (this.Game1Date.Season == Season.Winter)
-                {
-                    this.Game1Date.Season = Season.Spring;
-                    this.Game1Date.Year += 1;
-                }
-                else
-                {
-                    this.Game1Date.Season = (Season)(1+(int)this.Game1Date.Season);
-                }
-            }
-        }
-
-        public void AdvanceDay(WorldDate newDate)
-        {
-            Assert.IsTrue(newDate >= this.Game1Date, "Test is broken - advancing to a date that's already past.");
-            while (this.Game1Date < newDate)
-            {
-                this.AdvanceDay();
-            }
-        }
-
-        public string? GetPlayerModDataValue(string modDataKey)
-        {
-            this.ModData.TryGetValue(modDataKey, out string? value);
-            return value;
-        }
-
-        public void SetPlayerModDataValue(string modDataKey, string? value)
-        {
-            if (value is not null)
-            {
-                this.ModData[modDataKey] = value;
-            }
-            else
-            {
-                this.ModData.Remove(modDataKey);
-            }
-        }
-
 
         private class StubContentEvents : IContentEvents
         {

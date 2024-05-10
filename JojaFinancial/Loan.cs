@@ -41,7 +41,7 @@ namespace StardewValleyMods.JojaFinancial
             }
 
             int paymentDue = this.MinimumPayment - (this.GetPaidThisSeason() ?? 0);
-            switch (this.Game1Date.DayOfMonth)
+            switch (this.Mod.Game1.Date.DayOfMonth)
             {
                 case PrepareStatementDayOfSeason:
                     this.SendStatementMail();
@@ -92,9 +92,9 @@ namespace StardewValleyMods.JojaFinancial
 
         public bool TryMakePayment(int amount)
         {
-            if (this.Game1PlayerMoney >= amount)
+            if (this.Mod.Game1.PlayerMoney >= amount)
             {
-                this.Game1PlayerMoney -= amount;
+                this.Mod.Game1.PlayerMoney -= amount;
                 this.ChangeLoanBalance(-amount, "Payment");
                 this.ChangePaidThisSeason(amount);
                 if (this.GetBalance() == 0)
@@ -115,8 +115,8 @@ namespace StardewValleyMods.JojaFinancial
 
         public bool IsOnAutoPay
         {
-            get => this.GetPlayerModDataValueRaw(IsOnAutoPayModKey) is not null;
-            set => this.SetPlayerModDataValueRaw(IsOnAutoPayModKey, value ? true.ToString(CultureInfo.InvariantCulture) : null);
+            get => this.Mod.Game1.GetPlayerModData(IsOnAutoPayModKey) is not null;
+            set => this.Mod.Game1.SetPlayerModData(IsOnAutoPayModKey, value ? true.ToString(CultureInfo.InvariantCulture) : null);
         }
 
         private void AssessLateFee()
@@ -139,9 +139,9 @@ namespace StardewValleyMods.JojaFinancial
 
         private void AddLedgerLine(string s)
         {
-            string? oldLedger = this.GetPlayerModDataValueRaw(SeasonLedgerModKey);
+            string? oldLedger = this.Mod.Game1.GetPlayerModData(SeasonLedgerModKey);
             string newEntry = (oldLedger is null ? "" : (oldLedger + Environment.NewLine)) + s;
-            this.SetPlayerModDataValueRaw(SeasonLedgerModKey, newEntry);
+            this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, newEntry);
         }
 
         private int? GetBalance() => this.GetPlayerModDataValueInt(LoanBalanceModKey);
@@ -156,7 +156,7 @@ namespace StardewValleyMods.JojaFinancial
 
         private int? GetPlayerModDataValueInt(string modDataKey)
         {
-            string? strValue = this.GetPlayerModDataValueRaw(modDataKey);
+            string? strValue = this.Mod.Game1.GetPlayerModData(modDataKey);
             if (strValue is not null)
             {
                 if (int.TryParse(strValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out int balanceAsInt))
@@ -174,7 +174,7 @@ namespace StardewValleyMods.JojaFinancial
 
         private void SetPlayerModDataValue(string modDataKey, int? value)
         {
-            this.SetPlayerModDataValueRaw(modDataKey, value?.ToString(CultureInfo.InvariantCulture));
+            this.Mod.Game1.SetPlayerModData(modDataKey, value?.ToString(CultureInfo.InvariantCulture));
         }
 
         public void WriteToLog(string message, LogLevel level, bool isOnceOnly)
@@ -182,10 +182,10 @@ namespace StardewValleyMods.JojaFinancial
 
         private void SendStatementMail()
         {
-            string ledger = this.GetPlayerModDataValueRaw(SeasonLedgerModKey) ?? "";
+            string ledger = this.Mod.Game1.GetPlayerModData(SeasonLedgerModKey) ?? "";
             int paymentDue = Math.Max(0, this.MinimumPayment - (this.GetPaidThisSeason() ?? 0));
             StringBuilder content = new StringBuilder();
-            content.AppendLine($"Here is your complimentary JojaFinancial Furniture loan statement for {this.Game1Date.Season.ToString()} of year {this.Game1Date.Year}.");
+            content.AppendLine($"Here is your complimentary JojaFinancial Furniture loan statement for {this.Mod.Game1.Date.Season.ToString()} of year {this.Mod.Game1.Date.Year}.");
             content.AppendLine();
             if (paymentDue > 0)
             {
@@ -201,27 +201,27 @@ namespace StardewValleyMods.JojaFinancial
             content.AppendLine("Activity:");
             content.AppendLine(ledger);
 
-            this.SetPlayerModDataValueRaw(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year} statement", content.ToString());
+            this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
+            this.SendMail("statement", $"{this.Mod.Game1.Date.Season.ToString()} year {this.Mod.Game1.Date.Year} statement", content.ToString());
         }
 
         private void SendLoanPaidOffMail()
         {
-            string ledger = this.GetPlayerModDataValueRaw(SeasonLedgerModKey) ?? "";
+            string ledger = this.Mod.Game1.GetPlayerModData(SeasonLedgerModKey) ?? "";
             StringBuilder content = new StringBuilder();
             content.AppendLine("Your JojaFinancial Furniture Loan is paid in full!  We know you have choices, and we're super-happy that you chose us.  Almost as happy as we are to have all that money!");
             content.AppendLine();
             content.AppendLine("Activity:");
             content.AppendLine(ledger);
 
-            this.SetPlayerModDataValueRaw(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year} statement", content.ToString());
+            this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
+            this.SendMail("statement", $"{this.Mod.Game1.Date.Season.ToString()} year {this.Mod.Game1.Date.Year} statement", content.ToString());
         }
 
         private void SendMailAutoPaySucceeded(int amountPaid)
         {
             this.SendMail("autopay", "Autopay Succeeded", $@"Thank you for participating in JojaFinancial's AutoPay system!
-Your payment of {amountPaid} was processed on {this.Game1Date.Localize()}.");
+Your payment of {amountPaid} was processed on {this.Mod.Game1.Date.Localize()}.");
         }
 
         private void SendMailAutoPayFailed(int amountOwed)
@@ -261,7 +261,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
 
             string seasonAndYear(WorldDate date) => $"{date.Season} of year {date.Year}";
 
-            messageBuilder.AppendLine(seasonAndYear(this.Game1Date));
+            messageBuilder.AppendLine(seasonAndYear(this.Mod.Game1.Date));
             messageBuilder.AppendLine($" Loan Amount: {loanAmount}g");
             messageBuilder.AppendLine($" Fees");
             int balance = loanAmount;
@@ -272,7 +272,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             }
             messageBuilder.AppendLine($" Opening Balance: {balance}g");
 
-            for (int i = this.Game1Date.TotalWeeks/4; balance > 0; ++i)
+            for (int i = this.Mod.Game1.Date.TotalWeeks/4; balance > 0; ++i)
             {
                 messageBuilder.AppendLine();
                 WorldDate paymentDate = new WorldDate(1+(i / 4), (Season)(i % 4), Loan.PaymentDueDayOfSeason);
@@ -329,37 +329,11 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
         // Possibly allow a refinance to different terms at some point.
         private ILoanSchedule Schedule => new LoanSchedulePaidInFullWinter2();
 
-        protected virtual void SendMail(string idPrefix, string synopsis, string message, params string[] attachedItemQiids)
+        private void SendMail(string idPrefix, string synopsis, string message, params string[] attachedItemQiids)
         {
             this.Mod.GeneratedMail.SendMail(idPrefix, synopsis, message, attachedItemQiids);
         }
+        private int SeasonsSinceGameStart => this.Mod.Game1.Date.TotalWeeks / 4; // 4 weeks per season...
 
-        protected virtual WorldDate Game1Date => Game1.Date;
-
-        protected virtual int Game1PlayerMoney
-        {
-            get => Game1.player.Money;
-            set => Game1.player.Money = value;
-        }
-
-        private int SeasonsSinceGameStart => this.Game1Date.TotalWeeks / 4; // 4 weeks per season...
-
-        protected virtual string? GetPlayerModDataValueRaw(string modDataKey)
-        {
-            Game1.player.modData.TryGetValue(modDataKey, out string? value);
-            return value;
-        }
-
-        protected virtual void SetPlayerModDataValueRaw(string modDataKey, string? value)
-        {
-            if (value is null)
-            {
-                Game1.player.modData.Remove(modDataKey);
-            }
-            else
-            {
-                Game1.player.modData[modDataKey] = value;
-            }
-        }
     }
 }

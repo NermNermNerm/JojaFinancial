@@ -16,20 +16,22 @@ namespace StardewValleyMods.JojaFinancial
         // `ShippingMenu` might be the class to subclass/harmony patch for showing autopay.
         //  (Per 'Esca' in Discord)
 
+        public VGame1 Game1 { get; private set; }
         public Loan Loan { get; }
         public GeneratedMail GeneratedMail { get; }
 
         protected JojaPhoneHandler PhoneHandler { get; }
 
         public ModEntry()
-            : this(new Loan(), new JojaPhoneHandler())
+            : this(new VGame1(), new Loan(), new JojaPhoneHandler(), new GeneratedMail())
         { }
 
-        public ModEntry(Loan loan, JojaPhoneHandler phoneHandler)
+        public ModEntry(VGame1 game1, Loan loan, JojaPhoneHandler phoneHandler, GeneratedMail generatedMail)
         {
+            this.Game1 = game1;
             this.Loan = loan;
             this.PhoneHandler = phoneHandler;
-            this.GeneratedMail = new GeneratedMail();
+            this.GeneratedMail = generatedMail;
         }
 
         public override void Entry(IModHelper helper)

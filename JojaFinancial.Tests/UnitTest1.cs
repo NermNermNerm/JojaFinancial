@@ -11,12 +11,15 @@ namespace StardewValleyMods.JojaFinancial.Tests
         private StubLoan loan = new();
         private StubJojaPhoneHandler stubPhoneHandler = new();
         private StubModHelper stubHelper = new();
+        private StubGame1 stubGame1;
+        private StubGeneratedMail stubGeneratedMail = new StubGeneratedMail();
 
         public UnitTest1()
         {
+            this.stubGame1 = new StubGame1(this.stubHelper);
             this.loan = new();
             this.stubPhoneHandler = new();
-            this.mod = new ModEntry(this.loan, this.stubPhoneHandler);
+            this.mod = new ModEntry(this.stubGame1, this.loan, this.stubPhoneHandler, this.stubGeneratedMail);
         }
 
         [TestInitialize]
@@ -31,33 +34,33 @@ namespace StardewValleyMods.JojaFinancial.Tests
         public void TestMethod1()
         {
             // Wait for Morris visit
-            this.stubHelper.AdvanceDay(new WorldDate(1, Season.Spring, 5));
+            this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerPhonesIn("prospectus");
+            this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
 
-            this.stubHelper.AdvanceDay();
+            this.stubGame1.AdvanceDay();
 
-            // Expect the prospectus mail to be delivered
+            // Expect the terms mail to be delivered
             var paymentDates = this.loan.EnsureTermsHaveBeenDelivered();
-            this.stubHelper.AdvanceDay();
+            this.stubGame1.AdvanceDay();
 
             // Player gets the loan
             this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
-            this.stubHelper.AdvanceDay();
+            this.stubGame1.AdvanceDay();
             this.loan.EnsureCatalogsHaveBeenDelivered();
 
             foreach (var payment in paymentDates)
             {
-                this.stubHelper.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
+                this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
                 int minimumPaymentPerStatement = this.loan.EnsureSeasonalStatementDelivered();
                 Assert.AreEqual(minimumPaymentPerStatement, payment.payment);
                 if (minimumPaymentPerStatement > 0)
                 {
-                    this.stubHelper.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason));
-                    this.stubHelper.Game1PlayerMoney = minimumPaymentPerStatement;
+                    this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason));
+                    this.stubGame1.PlayerMoney = minimumPaymentPerStatement;
                     this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "minimum");
-                    Assert.AreEqual(0, this.stubHelper.Game1PlayerMoney);
+                    Assert.AreEqual(0, this.stubGame1.PlayerMoney);
                 }
             }
         }
