@@ -63,6 +63,19 @@ namespace StardewValleyMods.JojaFinancial.Tests
                     Assert.AreEqual(0, this.stubGame1.PlayerMoney);
                 }
             }
+            // Next day the player should get a closure statement.
+            this.stubGame1.AdvanceDay();
+            _ = this.stubGeneratedMail.EnsureSingleMatchingItemWasDelivered(m => m.Message.Contains("paid in full"), "Closing Message");
+
+            // Advance a long time and validate that no mail happens.
+            this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
+            Assert.AreEqual(0, this.stubGeneratedMail.SentMail.Count);
         }
+
+        // To Test:
+        //  Player misses payments
+        //  Autopay
+        //  Pays back early
+        //  
     }
 }

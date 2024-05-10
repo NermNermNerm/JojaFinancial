@@ -36,10 +36,8 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
         public void EnsureCatalogsHaveBeenDelivered()
         {
-            var mailItem = this.StubMailer.SentMail.Find(m => m.IdPrefix == "welcome");
-            Assert.IsNotNull(mailItem, "Welcome mail was not delivered");
-            this.StubMailer.SentMail.Remove(mailItem);
-            Assert.AreEqual(0, this.StubMailer.SentMail.Count);
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.IdPrefix == "welcome", "Loan Welcome");
+            this.StubMailer.AssertNoMoreMail();
         }
 
         private static readonly Regex StatementPaymentRegex = new Regex($@"minimum payment.*{Loan.PaymentDueDayOfSeason}.*season is: (?<payment>\d+)g", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -47,10 +45,8 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
         public int EnsureSeasonalStatementDelivered()
         {
-            var mailItem = this.StubMailer.SentMail.Find(m => m.IdPrefix == "statement");
-            Assert.IsNotNull(mailItem, "Statement mail was not delivered");
-            this.StubMailer.SentMail.Remove(mailItem);
-            Assert.IsNull(this.StubMailer.SentMail.Find(m => m.IdPrefix == "statement"), "More than one statement sent");
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.IdPrefix == "statement", "Seasonal Statement");
+            this.StubMailer.AssertNoMoreMail();
 
             var match = StatementPaymentRegex.Match(mailItem.Message);
             if (match.Success)

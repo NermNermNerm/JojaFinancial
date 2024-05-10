@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StardewValley;
 using StardewValleyMods.JojaFinancial;
 
@@ -18,6 +14,33 @@ namespace JojaFinancial.Tests
         public override void SendMail(string idPrefix, string synopsis, string message, params (string qiid, int count)[] attachedItems)
         {
             this.SentMail.Add(new MailItem(idPrefix, synopsis, message, this.Mod.Game1.Date, attachedItems));
+        }
+
+        public MailItem EnsureSingleMatchingItemWasDelivered(Func<MailItem, bool> predicate, string messageDescription)
+        {
+            var result = this.SentMail.FirstOrDefault(predicate);
+            if (result is null)
+            {
+                var otherMail = this.SentMail.FirstOrDefault();
+                if (otherMail is not null)
+                {
+                    Assert.Fail($"{messageDescription} was not sent, but this was: {otherMail.IdPrefix}|{otherMail.Synopsis}\r\n{otherMail.Message}");
+                }
+                else
+                {
+                    Assert.Fail($"{messageDescription} was not sent");
+                }
+            }
+            Assert.IsNotNull(result, $"{messageDescription} was not sent");
+            this.SentMail.Remove(result);
+            Assert.IsFalse(this.SentMail.Any(predicate), $"More than one {messageDescription} mail was sent");
+            return result;
+        }
+
+        public void AssertNoMoreMail()
+        {
+            var example = this.SentMail.FirstOrDefault();
+            Assert.IsNull(example, $"Mail was sent when it shouldn't have been: {example?.IdPrefix}|{example?.Synopsis}\r\n{example?.Message}");
         }
     }
 }
