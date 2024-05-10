@@ -185,7 +185,7 @@ namespace StardewValleyMods.JojaFinancial
             string ledger = this.GetPlayerModDataValueRaw(SeasonLedgerModKey) ?? "";
             int paymentDue = Math.Max(0, this.MinimumPayment - (this.GetPaidThisSeason() ?? 0));
             StringBuilder content = new StringBuilder();
-            content.AppendLine($"Here is your complimentary JojaFinancial Furniture loan statement for {this.Game1Date.Season.ToString()} of year {this.Game1Date.Year + 1}.");
+            content.AppendLine($"Here is your complimentary JojaFinancial Furniture loan statement for {this.Game1Date.Season.ToString()} of year {this.Game1Date.Year}.");
             content.AppendLine();
             if (paymentDue > 0)
             {
@@ -202,7 +202,7 @@ namespace StardewValleyMods.JojaFinancial
             content.AppendLine(ledger);
 
             this.SetPlayerModDataValueRaw(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year + 1} statement", content.ToString());
+            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year} statement", content.ToString());
         }
 
         private void SendLoanPaidOffMail()
@@ -215,7 +215,7 @@ namespace StardewValleyMods.JojaFinancial
             content.AppendLine(ledger);
 
             this.SetPlayerModDataValueRaw(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year + 1} statement", content.ToString());
+            this.SendMail("statement", $"{this.Game1Date.Season.ToString()} year {this.Game1Date.Year} statement", content.ToString());
         }
 
         private void SendMailAutoPaySucceeded(int amountPaid)
