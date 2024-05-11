@@ -10,7 +10,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
         public StubModHelper StubHelper => (StubModHelper)this.Mod.Helper;
         public StubGeneratedMail StubMailer => (StubGeneratedMail)this.Mod.GeneratedMail;
 
-        private static readonly Regex PaymentEntryRegex = new Regex(@"(?<season>(spring|summer|fall|winter)) of year (?<year>\d+)(.|\n)*?Payment: \-(?<payment>\d+)g", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex PaymentEntryRegex = new Regex(@"(?<season>(spring|summer|fall|winter)) of year (?<year>\d+)\r?\n\s+Payment: \-(?<payment>\d+)g", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public List<(Season season, int year, int payment)> EnsureTermsHaveBeenDelivered()
         {
@@ -26,7 +26,8 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 result.Add(new(season, year, payment));
             }
 
-            Assert.AreEqual(8, result.Count, $"Expected 8 payments, but found {result.Count}");
+            int expectedPayments = this.Mod.Game1.Date.DayOfMonth >= Loan.PaymentDueDayOfSeason ? 7 : 8;
+            Assert.AreEqual(expectedPayments, result.Count, $"Expected {expectedPayments} payments, but found {result.Count}");
 
             this.StubMailer.SentMail.Remove(mailItem);
             mailItem = this.StubMailer.SentMail.Find(m => m.IdPrefix == "terms");

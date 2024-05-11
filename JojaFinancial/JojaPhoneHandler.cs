@@ -246,7 +246,7 @@ namespace StardewValleyMods.JojaFinancial
 
         public void HandleGetBalance()
         {
-            this.PhoneDialog($"Your current balance is {this.mod.Loan.RemainingBalance}.  Your minimum payment is {this.mod.Loan.MinimumPayment} and is due on the {Loan.PaymentDueDayString}.",
+            this.PhoneDialog($"Your current balance is {this.mod.Loan.RemainingBalance}g.  Your minimum payment is {this.mod.Loan.MinimumPayment}g and is due on the {Loan.PaymentDueDayString}.",
                 () => this.MainMenu("Is there anything else we can do for you?"));
         }
 

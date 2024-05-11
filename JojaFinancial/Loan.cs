@@ -272,21 +272,26 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             }
             messageBuilder.AppendLine($" Opening Balance: {balance}g");
 
-            for (int i = this.Mod.Game1.Date.TotalWeeks/4; balance > 0; ++i)
+            // The *Season variables here are really season+year*4.
+            int startingSeason = this.Mod.Game1.Date.TotalWeeks / 4;
+            for (int currentSeason = this.Mod.Game1.Date.TotalWeeks/4; balance > 0; ++currentSeason)
             {
-                messageBuilder.AppendLine();
-                WorldDate paymentDate = new WorldDate(1+(i / 4), (Season)(i % 4), Loan.PaymentDueDayOfSeason);
-                messageBuilder.AppendLine(seasonAndYear(paymentDate));
+                WorldDate paymentDate = new WorldDate(1 + (currentSeason / 4), (Season)(currentSeason % 4), Loan.PaymentDueDayOfSeason);
+                if (paymentDate > this.Mod.Game1.Date)
+                {
+                    messageBuilder.AppendLine();
+                    messageBuilder.AppendLine(seasonAndYear(paymentDate));
 
-                int payment = schedule.GetMinimumPayment(i, balance);
-                messageBuilder.AppendLine($" Payment: -{payment}g");
-                balance -= payment;
+                    int payment = schedule.GetMinimumPayment(currentSeason - startingSeason, balance);
+                    messageBuilder.AppendLine($" Payment: -{payment}g");
+                    balance -= payment;
 
-                int interest = (int)(balance * schedule.GetInterestRate(i));
-                balance += interest;
-                messageBuilder.AppendLine($" Interest: {interest}g");
+                    int interest = (int)(balance * schedule.GetInterestRate(currentSeason - startingSeason));
+                    balance += interest;
+                    messageBuilder.AppendLine($" Interest: {interest}g");
 
-                messageBuilder.AppendLine($" Remaining balance: {balance}g");
+                    messageBuilder.AppendLine($" Remaining balance: {balance}g");
+                }
             }
 
             this.SendMail("terms", "Furniture loan terms", messageBuilder.ToString());
