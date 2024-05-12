@@ -183,7 +183,9 @@ namespace StardewValleyMods.JojaFinancial
                 this.PhoneDialog(message, [
                     new PhoneMenuItem("Get your balance and minimum payment amount", this.HandleGetBalance),
                     new PhoneMenuItem("Make a payment", this.HandleMakePayment),
-                    new PhoneMenuItem("Set up autopay", this.HandleSetupAutoPay),
+                    this.mod.Loan.IsOnAutoPay
+                        ? new PhoneMenuItem("Turn off autopay", this.HandleAutoPay)
+                        : new PhoneMenuItem("Set up autopay", this.HandleAutoPay),
                 ]);
             }
             else if (this.mod.Loan.IsPaidOff)
@@ -277,7 +279,7 @@ namespace StardewValleyMods.JojaFinancial
             }
         }
 
-        public void HandleSetupAutoPay()
+        public void HandleAutoPay()
         {
             this.mod.Loan.IsOnAutoPay = !this.mod.Loan.IsOnAutoPay;
             string message = this.mod.Loan.IsOnAutoPay

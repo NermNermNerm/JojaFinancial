@@ -41,6 +41,22 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.StubMailer.AssertNoMoreMail();
         }
 
+        public void AssertGotAutoPaySuccessMail()
+        {
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis == "Autopay Succeeded", "AutoPay success");
+            if (this.RemainingBalance > 0)
+            {
+                this.StubMailer.AssertNoMoreMail();
+            }
+            // Leave it to the test to validate the end-of-loan mail.
+        }
+
+        public void AssertGotAutoPayFailedMail()
+        {
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis == "Auto-pay Failed!" && m.Message.Contains(this.MinimumPayment.ToString()), "AutoPay success");
+            this.StubMailer.AssertNoMoreMail();
+        }
+
         private static readonly Regex StatementPaymentRegex = new Regex($@"minimum payment.*{Loan.PaymentDueDayOfSeason}.*season is: (?<payment>\d+)g", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex NoPaymentDueRegex = new Regex($@"No payment is necessary", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -48,6 +64,12 @@ namespace StardewValleyMods.JojaFinancial.Tests
         {
             var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.IdPrefix == "statement", "Seasonal Statement");
             this.StubMailer.AssertNoMoreMail();
+
+            bool hasAutopayThing = mailItem.Message.Contains("automatically", StringComparison.OrdinalIgnoreCase);
+            if ( this.MinimumPayment > 0)
+            {
+                Assert.AreEqual(hasAutopayThing, this.IsOnAutoPay, $"If autopay is on, it should mention that, and otherwise not.  Message:\r\n{mailItem.Message}");
+            }
 
             var match = StatementPaymentRegex.Match(mailItem.Message);
             if (match.Success)
@@ -63,6 +85,11 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 Assert.Fail($"Could not find the payment amount in the statement:\r\n{mailItem.Message}");
                 return 0;
             }
+        }
+
+        public void AssertGotPaidInFullMail()
+        {
+            _ = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Message.Contains("paid in full"), "Closing Message");
         }
     }
 }

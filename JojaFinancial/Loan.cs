@@ -24,6 +24,7 @@ namespace StardewValleyMods.JojaFinancial
         public const int PrepareStatementDayOfSeason = 13;
         public const string PaymentDueDayString = "21st";
         public const int AutoPayDayOfSeason = 16;
+        public const string AutoPayDayString = "16th";
 
         private const int LateFee = 1000;
 
@@ -70,7 +71,7 @@ namespace StardewValleyMods.JojaFinancial
             if (paymentDue <= 0)
             {
                 // already paid.
-                this.LogTrace("Auto-pay did nothing as the player is already paid up");
+                // this.LogTrace("Auto-pay did nothing as the player is already paid up");
             }
             else if (this.TryMakePayment(paymentDue))
             {
@@ -189,7 +190,12 @@ namespace StardewValleyMods.JojaFinancial
             content.AppendLine();
             if (paymentDue > 0)
             {
-                content.AppendLine($"Your minimum payment, due before the {PaymentDueDayString} of this season is: {paymentDue}g.");
+                content.Append($"Your minimum payment, due before the {PaymentDueDayString} of this season is: {paymentDue}g.");
+                if (this.IsOnAutoPay)
+                {
+                    content.Append($"  This amount will be automatically deducted on the {AutoPayDayOfSeason}.");
+                }
+                content.AppendLine();
             }
             else
             {
@@ -221,7 +227,7 @@ namespace StardewValleyMods.JojaFinancial
         private void SendMailAutoPaySucceeded(int amountPaid)
         {
             this.SendMail("autopay", "Autopay Succeeded", $@"Thank you for participating in JojaFinancial's AutoPay system!
-Your payment of {amountPaid} was processed on {this.Mod.Game1.Date.Localize()}.");
+Your payment of {amountPaid} was processed on the {AutoPayDayString}.");
         }
 
         private void SendMailAutoPayFailed(int amountOwed)

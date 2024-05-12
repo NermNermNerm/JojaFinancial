@@ -40,6 +40,7 @@ namespace JojaFinancial.Tests
                 Assert.Fail("Test failed to set PromptToTake");
             }
 
+            this.Messages.Add(message);
             string prompt = this.PromptToTake.Dequeue();
             if (prompt == "")
             {
@@ -51,7 +52,6 @@ namespace JojaFinancial.Tests
             Assert.IsTrue(options.Count > 0, $"None of the actual prompts matched '{this.PromptToTake}'.  Options include: {string.Join(", ", options.Select(i => i.Response))}");
             Assert.IsTrue(options.Count == 1, $"'{this.PromptToTake}' needs to be made more specific, options include: {string.Join(", ", options.Select(i => i.Response))}");
 
-            this.Messages.Add(message);
             options[0].Action();
         }
 
@@ -68,6 +68,22 @@ namespace JojaFinancial.Tests
             Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
             Assert.AreEqual(payment, int.Parse(match.Groups["payment"].Value));
             Assert.AreEqual(balance, int.Parse(match.Groups["balance"].Value));
+        }
+
+        public void GivenPlayerSetsUpAutopay()
+        {
+            this.GivenPlayerPhonesIn("Set up autopay");
+            string response = this.Messages[1];
+            Assert.IsTrue(response.StartsWith("Thank you for taking advantage of AutoPay"), $"Unexpected response: {response}");
+            Assert.IsTrue(response.Contains(Loan.AutoPayDayOfSeason.ToString()), $"AutoPay response should have mentioned the automatic payment date: {response}");
+        }
+
+        public void GivenPlayerTurnsOffAutopay()
+        {
+            this.GivenPlayerPhonesIn("Turn off autopay");
+            string response = this.Messages[1];
+            Assert.IsTrue(response.StartsWith("Auto-Pay has been turned off"), $"Unexpected response: {response}");
+            Assert.IsTrue(response.Contains(Loan.PaymentDueDayOfSeason.ToString()), $"AutoPay response should have mentioned the payment date: {response}");
         }
     }
 }
