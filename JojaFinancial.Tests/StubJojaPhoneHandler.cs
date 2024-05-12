@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using StardewValley;
 using StardewValleyMods.JojaFinancial;
 
 namespace JojaFinancial.Tests
@@ -14,8 +15,9 @@ namespace JojaFinancial.Tests
         public Queue<string> PromptToTake { get; } = new Queue<string>();
         private List<string> Messages = new List<string>();
 
-        public void GivenPlayerPhonesIn(params string[] prompts)
+        public void GivenPlayerMakesMainMenuChoices(params string[] prompts)
         {
+
             this.Messages.Clear();
             Assert.IsTrue(!this.PromptToTake.Any(), "There are some untaken phone choices left.  Perhaps a bad test or something went wrong earlier?");
             foreach (string prompt in prompts)
@@ -30,6 +32,20 @@ namespace JojaFinancial.Tests
                 // On the last day of the season, the system hangs up on the player...  We'll allow that in general I guess.
                 this.PromptToTake.Dequeue();
             }
+            Assert.IsTrue(!this.PromptToTake.Any(), "There are some untaken phone choices left after phone call completed.");
+        }
+
+        public void GivenPlayerGetsRigmarole(params string[] prompts)
+        {
+            this.Messages.Clear();
+            Assert.IsTrue(!this.PromptToTake.Any(), "There are some untaken phone choices left.  Perhaps a bad test or something went wrong earlier?");
+            foreach (string prompt in prompts)
+            {
+                this.PromptToTake.Enqueue(prompt);
+            }
+            this.PromptToTake.Enqueue("");
+            this.RigmaroleMenu();
+
             Assert.IsTrue(!this.PromptToTake.Any(), "There are some untaken phone choices left after phone call completed.");
         }
 
@@ -49,8 +65,8 @@ namespace JojaFinancial.Tests
             }
 
             var options = menuItems.Where(mi => mi.Response.Contains(prompt, StringComparison.OrdinalIgnoreCase)).ToList();
-            Assert.IsTrue(options.Count > 0, $"None of the actual prompts matched '{this.PromptToTake}'.  Options include: {string.Join(", ", options.Select(i => i.Response))}");
-            Assert.IsTrue(options.Count == 1, $"'{this.PromptToTake}' needs to be made more specific, options include: {string.Join(", ", options.Select(i => i.Response))}");
+            Assert.IsTrue(options.Count > 0, $"None of the actual prompts matched '{prompt}'.  Options include: {string.Join(", ", menuItems.Select(i => i.Response))}");
+            Assert.IsTrue(options.Count == 1, $"'{this.PromptToTake}' needs to be made more specific, options include: {string.Join(", ", menuItems.Select(i => i.Response))}");
 
             options[0].Action();
         }
@@ -63,7 +79,7 @@ namespace JojaFinancial.Tests
 
         public void AssertPaymentAndBalance(int payment, int balance)
         {
-            this.GivenPlayerPhonesIn("balance and minimum payment");
+            this.GivenPlayerMakesMainMenuChoices("balance and minimum payment");
             var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment is (?<payment>\d+)g", RegexOptions.IgnoreCase).Match(this.Messages[1]);
             Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
             Assert.AreEqual(payment, int.Parse(match.Groups["payment"].Value));
@@ -72,7 +88,7 @@ namespace JojaFinancial.Tests
 
         public void GivenPlayerSetsUpAutopay()
         {
-            this.GivenPlayerPhonesIn("Set up autopay");
+            this.GivenPlayerMakesMainMenuChoices("Set up autopay");
             string response = this.Messages[1];
             Assert.IsTrue(response.StartsWith("Thank you for taking advantage of AutoPay"), $"Unexpected response: {response}");
             Assert.IsTrue(response.Contains(Loan.AutoPayDayOfSeason.ToString()), $"AutoPay response should have mentioned the automatic payment date: {response}");
@@ -80,10 +96,25 @@ namespace JojaFinancial.Tests
 
         public void GivenPlayerTurnsOffAutopay()
         {
-            this.GivenPlayerPhonesIn("Turn off autopay");
+            this.GivenPlayerMakesMainMenuChoices("Turn off autopay");
             string response = this.Messages[1];
             Assert.IsTrue(response.StartsWith("Auto-Pay has been turned off"), $"Unexpected response: {response}");
             Assert.IsTrue(response.Contains(Loan.PaymentDueDayOfSeason.ToString()), $"AutoPay response should have mentioned the payment date: {response}");
+        }
+
+        internal void EnsureRandoSaleObjectDeliveredAndPaidFor(int priorPlayerMoney)
+        {
+            var stubMailer = (StubGeneratedMail)this.Mod.GeneratedMail;
+            var mailItem = stubMailer.EnsureSingleMatchingItemWasDelivered(m => m.IdPrefix == "jojaSale", "Joja Rando-Sale");
+            Assert.AreEqual($"Your {StubGame1.RandoSaleObjectName} from JojaFinancial", mailItem.Synopsis);
+            Assert.AreEqual(1, mailItem.attachedItems.Length);
+            Assert.AreEqual("(O)" + StubGame1.RandoSaleObjectId, mailItem.attachedItems[0].qiid);
+            var m = new Regex(@" (?<price>\d+)g").Match(this.Messages[1]);
+            Assert.IsTrue(m.Success);
+            int listPrice = int.Parse(m.Groups["price"].Value);
+            Assert.IsTrue(listPrice >= 2 * mailItem.attachedItems[0].count * StubGame1.RandoSalePrice);
+            Assert.IsTrue(listPrice <= 3 * mailItem.attachedItems[0].count * StubGame1.RandoSalePrice);
+            Assert.AreEqual(priorPlayerMoney - listPrice, this.Mod.Game1.PlayerMoney);
         }
     }
 }

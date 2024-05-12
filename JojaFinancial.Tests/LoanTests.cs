@@ -5,7 +5,7 @@ using StardewValley;
 namespace StardewValleyMods.JojaFinancial.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class LoanTests
     {
         private ModEntry mod = new ModEntry();
         private StubLoan stubLoan = new();
@@ -14,7 +14,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
         private StubGame1 stubGame1;
         private StubGeneratedMail stubGeneratedMail = new StubGeneratedMail();
 
-        public UnitTest1()
+        public LoanTests()
         {
             this.stubGame1 = new StubGame1(this.stubHelper);
             this.stubLoan = new();
@@ -37,7 +37,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("terms");
 
             this.stubGame1.AdvanceDay();
 
@@ -46,9 +46,10 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay();
 
             // Player gets the loan
-            this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Start");
             this.stubGame1.AdvanceDay();
             this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
 
             foreach (var payment in paymentDates)
             {
@@ -59,7 +60,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 {
                     this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason));
                     this.stubGame1.PlayerMoney = minimumPaymentPerStatement;
-                    this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "minimum");
+                    this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
                     Assert.AreEqual(0, this.stubGame1.PlayerMoney);
                 }
             }
@@ -79,14 +80,15 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Start a couple seasons late, and late in the season too
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Fall, 27));
 
-            this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("terms");
             this.stubGame1.AdvanceDay();
             var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
 
             // Player starts the loan on the 28th - that still counts as in the Fall, so fall and winter are payment free.
-            this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Start");
             this.stubGame1.AdvanceDay();
             this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
 
             this.stubPhoneHandler.AssertPaymentAndBalance(0, 230000);
 
@@ -99,7 +101,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 {
                     this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason));
                     this.stubGame1.PlayerMoney = minimumPaymentPerStatement;
-                    this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "minimum");
+                    this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
                     Assert.AreEqual(0, this.stubGame1.PlayerMoney);
                 }
             }
@@ -125,6 +127,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
             this.stubGame1.AdvanceDay();
             this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
 
             for (int seasonCounter = 0; seasonCounter < 8; ++seasonCounter)
             {
@@ -147,7 +150,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                         // Phones it in the next day
                         this.stubGame1.AdvanceDay();
                         this.stubGame1.PlayerMoney = minimumPaymentPerStatement + 5;
-                        this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "minimum");
+                        this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
 
                         // Set up a no-autopay thing for next month.
@@ -156,7 +159,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                     case 5:
                         this.stubGeneratedMail.AssertNoMoreMail(); // Not on autopay this month
                         this.stubGame1.PlayerMoney = minimumPaymentPerStatement + 5;
-                        this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "minimum");
+                        this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
                         this.stubPhoneHandler.GivenPlayerSetsUpAutopay();
                         break;
@@ -186,7 +189,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("terms");
 
             this.stubGame1.AdvanceDay();
 
@@ -195,7 +198,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay();
 
             // Player gets the loan
-            this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Start");
             this.stubGame1.AdvanceDay();
             this.stubLoan.EnsureCatalogsHaveBeenDelivered();
 
@@ -207,7 +210,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 {
                     this.stubGame1.PlayerMoney = 1 + this.stubLoan.RemainingBalance;
                     // Early payback
-                    this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "balance");
+                    this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "balance");
                     Assert.AreEqual(1, this.stubGame1.PlayerMoney);
                     break;
                 }
@@ -229,11 +232,51 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGeneratedMail.AssertNoMoreMail();
         }
 
+        [TestMethod]
+        public void RigmaroleTestNoSale()
+        {
+            this.stubGame1.PlayerMoney = 1000;
+            this.stubPhoneHandler.GivenPlayerGetsRigmarole(this.stubGame1.PlayerName, "No thanks", "Yes", "Start");
+            Assert.IsTrue(this.stubLoan.IsLoanUnderway);
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
+            Assert.AreEqual(1000, this.stubGame1.PlayerMoney);
+        }
 
-        // To Test:
-        //  Rigmarole tests
+        [TestMethod]
+        public void RigmaroleBitesOnFirst()
+        {
+            const int priorPlayerMoney = 100000;
+            this.stubGame1.PlayerMoney = priorPlayerMoney;
+            this.stubPhoneHandler.GivenPlayerGetsRigmarole(this.stubGame1.PlayerName, "take it", "Start");
+            Assert.IsTrue(this.stubLoan.IsLoanUnderway);
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubPhoneHandler.EnsureRandoSaleObjectDeliveredAndPaidFor(priorPlayerMoney);
+            this.stubGeneratedMail.AssertNoMoreMail();
+        }
 
-        // Other:
-        //  Debug function to pump out all the mails to validate the text.
+        [TestMethod]
+        public void RigmaroleTooPoor()
+        {
+            const int priorPlayerMoney = 1;
+            this.stubGame1.PlayerMoney = priorPlayerMoney;
+            this.stubPhoneHandler.GivenPlayerGetsRigmarole(this.stubGame1.PlayerName, "take it", "Start");
+            Assert.IsTrue(this.stubLoan.IsLoanUnderway);
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
+            Assert.AreEqual(priorPlayerMoney, this.stubGame1.PlayerMoney);
+        }
+
+        [TestMethod]
+        public void RigmaroleBitesOnSecond()
+        {
+            const int priorPlayerMoney = 100000;
+            this.stubGame1.PlayerMoney = priorPlayerMoney;
+            this.stubPhoneHandler.GivenPlayerGetsRigmarole(this.stubGame1.PlayerName, "No thanks", "okay", "Start");
+            Assert.IsTrue(this.stubLoan.IsLoanUnderway);
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubPhoneHandler.EnsureRandoSaleObjectDeliveredAndPaidFor(priorPlayerMoney);
+            this.stubGeneratedMail.AssertNoMoreMail();
+        }
     }
 }

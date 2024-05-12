@@ -1,8 +1,11 @@
-using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Objects;
+
+// TODO:
+//  Add Debug function to pump out all the mails to validate the text.
+//  Suppress golden clock if loan is in-progress
+//  Offer 3-year loan
 
 namespace StardewValleyMods.JojaFinancial
 {

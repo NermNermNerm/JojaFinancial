@@ -21,9 +21,11 @@ namespace JojaFinancial.Tests
 
         public override WorldDate Date { get; } = new WorldDate(1, Season.Spring, 1);
 
+        public override string PlayerName => "Testy";
+
+        public override Random Random { get; } = new Random();
 
         public Dictionary<string, string> ModData { get; } = new Dictionary<string, string>();
-
 
         public override int PlayerMoney { get; set; }
 
@@ -77,6 +79,17 @@ namespace JojaFinancial.Tests
             }
         }
 
+        public const string RandoSaleObjectName = "Test Object";
+        public const string RandoSaleObjectId = "Fake";
+        public const int RandoSalePrice = 57;
 
+        public override StardewValley.Object CreateObject(string itemId, int quantity)
+            => new StardewValley.Object()
+            {
+                ItemId = RandoSaleObjectId,
+                Name = RandoSaleObjectName,
+                Stack = quantity,
+                Price = RandoSalePrice,
+            };
     }
 }

@@ -38,7 +38,6 @@ namespace StardewValleyMods.JojaFinancial.Tests
         public void EnsureCatalogsHaveBeenDelivered()
         {
             var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.IdPrefix == "welcome", "Loan Welcome");
-            this.StubMailer.AssertNoMoreMail();
         }
 
         public void AssertGotAutoPaySuccessMail()

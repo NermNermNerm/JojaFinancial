@@ -38,5 +38,8 @@ namespace StardewValleyMods.JojaFinancial
                 Game1.player.modData[modDataKey] = value;
             }
         }
+
+        public virtual StardewValley.Object CreateObject(string itemId, int quantity)
+            => ItemRegistry.Create<StardewValley.Object>(itemId, quantity);
     }
 }
