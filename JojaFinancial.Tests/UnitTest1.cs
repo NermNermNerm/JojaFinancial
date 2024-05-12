@@ -8,7 +8,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
     public class UnitTest1
     {
         private ModEntry mod = new ModEntry();
-        private StubLoan loan = new();
+        private StubLoan stubLoan = new();
         private StubJojaPhoneHandler stubPhoneHandler = new();
         private StubModHelper stubHelper = new();
         private StubGame1 stubGame1;
@@ -17,9 +17,9 @@ namespace StardewValleyMods.JojaFinancial.Tests
         public UnitTest1()
         {
             this.stubGame1 = new StubGame1(this.stubHelper);
-            this.loan = new();
+            this.stubLoan = new();
             this.stubPhoneHandler = new();
-            this.mod = new ModEntry(this.stubGame1, this.loan, this.stubPhoneHandler, this.stubGeneratedMail);
+            this.mod = new ModEntry(this.stubGame1, this.stubLoan, this.stubPhoneHandler, this.stubGeneratedMail);
         }
 
         [TestInitialize]
@@ -42,18 +42,18 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay();
 
             // Expect the terms mail to be delivered
-            var paymentDates = this.loan.EnsureTermsHaveBeenDelivered();
+            var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
             this.stubGame1.AdvanceDay();
 
             // Player gets the loan
             this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
             this.stubGame1.AdvanceDay();
-            this.loan.EnsureCatalogsHaveBeenDelivered();
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
 
             foreach (var payment in paymentDates)
             {
                 this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
-                int minimumPaymentPerStatement = this.loan.EnsureSeasonalStatementDelivered();
+                int minimumPaymentPerStatement = this.stubLoan.EnsureSeasonalStatementDelivered();
                 Assert.AreEqual(minimumPaymentPerStatement, payment.payment);
                 if (minimumPaymentPerStatement > 0)
                 {
@@ -65,7 +65,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             }
             // Next day the player should get a closure statement.
             this.stubGame1.AdvanceDay();
-            this.loan.AssertGotPaidInFullMail();
+            this.stubLoan.AssertGotPaidInFullMail();
 
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
@@ -81,19 +81,19 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
             this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
             this.stubGame1.AdvanceDay();
-            var paymentDates = this.loan.EnsureTermsHaveBeenDelivered();
+            var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
 
             // Player starts the loan on the 28th - that still counts as in the Fall, so fall and winter are payment free.
             this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
             this.stubGame1.AdvanceDay();
-            this.loan.EnsureCatalogsHaveBeenDelivered();
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
 
             this.stubPhoneHandler.AssertPaymentAndBalance(0, 230000);
 
             foreach (var payment in paymentDates)
             {
                 this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
-                int minimumPaymentPerStatement = this.loan.EnsureSeasonalStatementDelivered();
+                int minimumPaymentPerStatement = this.stubLoan.EnsureSeasonalStatementDelivered();
                 Assert.AreEqual(minimumPaymentPerStatement, payment.payment);
                 if (minimumPaymentPerStatement > 0)
                 {
@@ -105,7 +105,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             }
             // Next day the player should get a closure statement.
             this.stubGame1.AdvanceDay();
-            this.loan.AssertGotPaidInFullMail();
+            this.stubLoan.AssertGotPaidInFullMail();
             // y3 summer, 22
             Assert.AreEqual(new WorldDate(3, Season.Summer, Loan.PaymentDueDayOfSeason + 1), this.stubGame1.Date);
 
@@ -118,30 +118,30 @@ namespace StardewValleyMods.JojaFinancial.Tests
         [TestMethod]
         public void AutoPay()
         {
-            this.loan.InitiateLoan(); // Simulate agreeing with Morris.
+            this.stubLoan.InitiateLoan(); // Simulate agreeing with Morris.
             this.stubPhoneHandler.AssertPaymentAndBalance(0, 230000); // Should work right away.
 
             this.stubPhoneHandler.GivenPlayerSetsUpAutopay();
 
             this.stubGame1.AdvanceDay();
-            this.loan.EnsureCatalogsHaveBeenDelivered();
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
 
             for (int seasonCounter = 0; seasonCounter < 8; ++seasonCounter)
             {
                 this.stubGame1.AdvanceDay(new WorldDate(1+(seasonCounter/4), (Season)(seasonCounter % 4), Loan.PrepareStatementDayOfSeason + 1));
-                int minimumPaymentPerStatement = this.loan.EnsureSeasonalStatementDelivered();
+                int minimumPaymentPerStatement = this.stubLoan.EnsureSeasonalStatementDelivered();
 
                 switch (seasonCounter)
                 {
                     case 0:
                     case 1:
-                        Assert.AreEqual(0, this.loan.MinimumPayment);
+                        Assert.AreEqual(0, this.stubLoan.MinimumPayment);
                         this.stubGeneratedMail.AssertNoMoreMail();
                         break;
                     case 4:
                         this.stubGame1.PlayerMoney = 5; // given insufficient funds
                         this.stubGame1.AdvanceDay(new WorldDate(1 + (seasonCounter / 4), (Season)(seasonCounter % 4), Loan.AutoPayDayOfSeason + 1));
-                        this.loan.AssertGotAutoPayFailedMail();
+                        this.stubLoan.AssertGotAutoPayFailedMail();
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
 
                         // Phones it in the next day
@@ -163,13 +163,13 @@ namespace StardewValleyMods.JojaFinancial.Tests
                     default:
                         this.stubGame1.PlayerMoney = minimumPaymentPerStatement + 5;
                         this.stubGame1.AdvanceDay(new WorldDate(1 + (seasonCounter / 4), (Season)(seasonCounter % 4), Loan.AutoPayDayOfSeason + 1));
-                        this.loan.AssertGotAutoPaySuccessMail();
+                        this.stubLoan.AssertGotAutoPaySuccessMail();
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
                         break;
                 }
             }
 
-            this.loan.AssertGotPaidInFullMail();
+            this.stubLoan.AssertGotPaidInFullMail();
 
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
@@ -178,10 +178,62 @@ namespace StardewValleyMods.JojaFinancial.Tests
         }
 
 
+        [TestMethod]
+        public void MissedPaymentsAndEarlyRepay()
+        {
+            // Miss a payment without autopay
+            // Wait for Morris visit
+            this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
+
+            // Player asks for the terms
+            this.stubPhoneHandler.GivenPlayerPhonesIn("terms");
+
+            this.stubGame1.AdvanceDay();
+
+            // Expect the terms mail to be delivered
+            var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
+            this.stubGame1.AdvanceDay();
+
+            // Player gets the loan
+            this.stubPhoneHandler.GivenPlayerPhonesIn("Start");
+            this.stubGame1.AdvanceDay();
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+
+            foreach (var payment in paymentDates)
+            {
+                this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
+                int minimumPaymentPerStatement = this.stubLoan.EnsureSeasonalStatementDelivered();
+                if (this.stubGame1.Date.Year == 2)
+                {
+                    this.stubGame1.PlayerMoney = 1 + this.stubLoan.RemainingBalance;
+                    // Early payback
+                    this.stubPhoneHandler.GivenPlayerPhonesIn("Make a payment", "balance");
+                    Assert.AreEqual(1, this.stubGame1.PlayerMoney);
+                    break;
+                }
+                else if (minimumPaymentPerStatement > 0)
+                {
+                    int balanceBeforeMissingPayment = this.stubLoan.RemainingBalance;
+                    this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason + 1));
+                    this.stubLoan.AssertGotMissedPaymentMail();
+                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.LateFee, this.stubLoan.RemainingBalance); // Late fee is assessed
+                }
+            }
+
+            // Next day the player should get a closure statement.
+            this.stubGame1.AdvanceDay();
+            this.stubLoan.AssertGotPaidInFullMail();
+
+            // Advance a long time and validate that no mail happens.
+            this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
+            this.stubGeneratedMail.AssertNoMoreMail();
+        }
+
 
         // To Test:
-        //  Player misses payments
-        //  Pays back early
         //  Rigmarole tests
+
+        // Other:
+        //  Debug function to pump out all the mails to validate the text.
     }
 }

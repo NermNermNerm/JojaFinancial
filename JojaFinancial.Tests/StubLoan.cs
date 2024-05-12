@@ -91,5 +91,14 @@ namespace StardewValleyMods.JojaFinancial.Tests
         {
             _ = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Message.Contains("paid in full"), "Closing Message");
         }
+
+        public void AssertGotMissedPaymentMail()
+        {
+            _ = this.StubMailer.EnsureSingleMatchingItemWasDelivered(
+                m => m.Synopsis.Contains("Missed payment", StringComparison.OrdinalIgnoreCase)
+                     && m.Message.Contains(Loan.LateFee.ToString())
+                , "Missed Payment Message");
+
+        }
     }
 }

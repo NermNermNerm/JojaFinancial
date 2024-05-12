@@ -26,7 +26,7 @@ namespace StardewValleyMods.JojaFinancial
         public const int AutoPayDayOfSeason = 16;
         public const string AutoPayDayString = "16th";
 
-        private const int LateFee = 1000;
+        public const int LateFee = 5000;
 
         public void Entry(ModEntry mod)
         {
