@@ -6,6 +6,7 @@ using StardewValley;
 //  Add Debug function to pump out all the mails to validate the text.
 //  Suppress golden clock if loan is in-progress
 //  Offer 3-year loan
+//  i18n
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -14,10 +15,6 @@ namespace StardewValleyMods.JojaFinancial
     {
         private const string StartLoanEventCommand = "JojaFinance.StartLoan";
         private const string MorrisOffersLoanEvent = "JojaFinance.MorrisOffer";
-
-
-        // `ShippingMenu` might be the class to subclass/harmony patch for showing autopay.
-        //  (Per 'Esca' in Discord)
 
         public VGame1 Game1 { get; private set; }
         public Loan Loan { get; }

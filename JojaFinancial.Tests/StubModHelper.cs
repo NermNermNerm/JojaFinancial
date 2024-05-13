@@ -1,7 +1,6 @@
 using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewValley;
 
 namespace JojaFinancial.Tests
 {
@@ -61,13 +60,15 @@ namespace JojaFinancial.Tests
             ISpecializedEvents IModEvents.Specialized => throw new NotImplementedException();
         }
 
+        public StubGameContent StubGameContent { get; } = new StubGameContent();
+
         string IModHelper.DirectoryPath => throw new NotImplementedException();
 
         public IModEvents Events { get; } = new StubModEvents();
 
         ICommandHelper IModHelper.ConsoleCommands => throw new NotImplementedException();
 
-        IGameContentHelper IModHelper.GameContent => throw new NotImplementedException();
+        IGameContentHelper IModHelper.GameContent => this.StubGameContent;
 
         IModContentHelper IModHelper.ModContent => throw new NotImplementedException();
 
@@ -95,4 +96,5 @@ namespace JojaFinancial.Tests
             throw new NotImplementedException();
         }
     }
+
 }

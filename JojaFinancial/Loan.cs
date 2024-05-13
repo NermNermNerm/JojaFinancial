@@ -6,6 +6,7 @@ using System.Text;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData.Buildings;
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -32,6 +33,62 @@ namespace StardewValleyMods.JojaFinancial
         {
             this.Mod = mod;
             mod.Helper.Events.GameLoop.DayEnding += this.GameLoop_DayEnding;
+            mod.Helper.Events.GameLoop.SaveLoaded += this.GameLoop_SaveLoaded;
+            mod.Helper.Events.Content.AssetRequested += this.Content_AssetRequested;
+        }
+
+        private static string? oldGoldClockBuilder;
+
+        private void Content_AssetRequested(object? sender, AssetRequestedEventArgs e)
+        {
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
+            {
+                e.Edit(editor =>
+                {
+                    var buildingData = editor.AsDictionary<string, BuildingData>().Data;
+                    if (Game1.player is null)
+                    {
+                        this.LogTrace("Skipping modifying the gold clock - the player doesn't exist yet.");
+                        return;
+                    }
+
+                    if (!buildingData.TryGetValue("Gold Clock", out BuildingData? goldClock))
+                    {
+                        this.LogWarning($"The gold clock purchase can't be disabled - it doesn't exist.");
+                        return;
+                    }
+
+                    if (this.IsLoanUnderway)
+                    {
+                        if (oldGoldClockBuilder is null && goldClock.Builder is not null)
+                        {
+                            oldGoldClockBuilder = goldClock.Builder;
+                            this.LogTrace($"Storing '{oldGoldClockBuilder}' as the builder for the gold clock.");
+                        }
+
+                        this.LogTrace("Disabling the gold clock as the loan is underway");
+                        goldClock.Builder = null;
+                    }
+                    else
+                    {
+                        if (goldClock.Builder is null)
+                        {
+                            goldClock.Builder = oldGoldClockBuilder ?? "Wizard";
+                            this.LogTrace($"Re-enabling the gold clock by setting it to {goldClock.Builder} - stashed value was {oldGoldClockBuilder}");
+                        }
+                    }
+                });
+            }
+        }
+
+        private void InvalidateBuildingData()
+        {
+            this.Mod.Helper.GameContent.InvalidateCache("Data/Buildings");
+        }
+
+        private void GameLoop_SaveLoaded(object? sender, SaveLoadedEventArgs e)
+        {
+            this.InvalidateBuildingData();
         }
 
         private void GameLoop_DayEnding(object? sender, DayEndingEventArgs e)
@@ -222,6 +279,7 @@ namespace StardewValleyMods.JojaFinancial
 
             this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
             this.SendMail("statement", $"{this.Mod.Game1.Date.Season.ToString()} year {this.Mod.Game1.Date.Year} statement", content.ToString());
+            this.InvalidateBuildingData();
         }
 
         private void SendMailAutoPaySucceeded(int amountPaid)
@@ -323,6 +381,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             this.SetPlayerModDataValue(LoanBalanceModKey, loanAmount + this.GetFees(this.Schedule, loanAmount).Sum(f => f.amount));
             this.SetPlayerModDataValue(PaidThisSeasonModKey, null);
             this.SendWelcomeMail();
+            this.InvalidateBuildingData();
         }
 
         private void SendWelcomeMail()
