@@ -7,9 +7,9 @@ using StardewValley;
 
 namespace StardewValleyMods.JojaFinancial
 {
-    internal class LoanSchedulePaidInFullWinter2 : ILoanSchedule
+    public class LoanScheduleThreeYear : ILoanSchedule
     {
-        private readonly static double[] percentageByMonth = [0, 0, .05, .1, .15, .3, .5, 1];
+        private readonly static double[] percentageByMonth = [0, 0, 0.03, 0.04, 0.05, 0.06, 0.1, 0.15, 0.25, 0.3, 0.5, 1 ];
 
         public double GetInterestRate(int seasonsSinceLoanOrigination)
         {

@@ -91,5 +91,10 @@ namespace JojaFinancial.Tests
                 Stack = quantity,
                 Price = RandoSalePrice,
             };
+
+        public override int? GetPriceOfItem(string itemId)
+        {
+            return itemId switch { "(F)1226" => 200000, "(F)1308" => 20000, _ => null } ;
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace StardewValleyMods.JojaFinancial
         private const string PaidThisSeasonModKey = "JojaFinancial.PaidThisSeason";
         private const string IsOnAutoPayModKey = "JojaFinancial.Autopay";
         private const string OriginationSeasonModKey = "JojaFinancial.OriginationSeason";
+        private const string YearsToPayModKey = "JojaFinancial.LoanSchedule";
         private const string SeasonLedgerModKey = "JojaFinancial.SeasonLedger";
 
         private const int LastDayOfSeason = 28;
@@ -141,7 +142,7 @@ namespace StardewValleyMods.JojaFinancial
         }
 
         private int GetSeasonsSinceOrigination()
-            => this.SeasonsSinceGameStart- this.GetPlayerModDataValueInt(OriginationSeasonModKey)!.Value;
+            => this.SeasonsSinceGameStart - this.GetPlayerModDataValueInt(OriginationSeasonModKey)!.Value;
 
         public int MinimumPayment
             => this.Schedule.GetMinimumPayment(this.GetSeasonsSinceOrigination(), this.RemainingBalance);
@@ -299,11 +300,12 @@ In order to avoid a penalty fee and possible interest rate increases, pay this a
             this.SendMail("payment", "Missed Payment!", $@"CREDIT DISASTER IMPENDING!  You missed your payment for this season, and a fee of {LateFee}g has been imposed and added to your outstanding balance.");
         }
 
-        public void SendMailLoanTerms()
-        {
-            ILoanSchedule schedule = new LoanSchedulePaidInFullWinter2();
-            int loanAmount = 220000; // TODO: Figure out the list price of the furniture and wallpaper catalogs from game data.
+        private int GetTotalCostOfCatalogs()
+            => this.Mod.Game1.GetPriceOfItem("(F)1226")!.Value + this.Mod.Game1.GetPriceOfItem("(F)1308")!.Value;
 
+        public void SendMailLoanTerms(ILoanSchedule schedule)
+        {
+            int loanAmount = this.GetTotalCostOfCatalogs();
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(
 @"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
@@ -358,7 +360,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
                 }
             }
 
-            this.SendMail("terms", "Furniture loan terms", messageBuilder.ToString());
+            this.SendMail("terms." + schedule.GetType().Name, "Furniture loan terms", messageBuilder.ToString());
         }
 
         private IEnumerable<(string name, int amount)> GetFees(ILoanSchedule schedule, int loanAmount)
@@ -370,14 +372,15 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             yield return ("Complimentary phone fee", 1000);
         }
 
-        public void InitiateLoan()
+        public void InitiateLoan(ILoanSchedule schedule)
         {
-            int loanAmount = 220000; // TODO: Figure out the list price of the furniture and wallpaper catalogs from game data.
+            int loanAmount = this.GetTotalCostOfCatalogs();
             this.ChangeLoanBalance(loanAmount, "Principal");
 
             // Consider changing things up if the loan is initiated after the 21st so it doesn't go around assessing fees.
             // That doesn't matter now since we're hard-coding a loan that has no minimum payment for the first two seasons.
             this.SetPlayerModDataValue(OriginationSeasonModKey, this.SeasonsSinceGameStart);
+            this.SetPlayerModDataValue(YearsToPayModKey, schedule is LoanScheduleTwoYear ? 2 : 3);
             this.SetPlayerModDataValue(LoanBalanceModKey, loanAmount + this.GetFees(this.Schedule, loanAmount).Sum(f => f.amount));
             this.SetPlayerModDataValue(PaidThisSeasonModKey, null);
             this.SendWelcomeMail();
@@ -397,7 +400,9 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
         }
 
         // Possibly allow a refinance to different terms at some point.
-        private ILoanSchedule Schedule => new LoanSchedulePaidInFullWinter2();
+        private ILoanSchedule Schedule => this.GetPlayerModDataValueInt(YearsToPayModKey) == 3
+            ? new LoanScheduleThreeYear()
+            : new LoanScheduleTwoYear();
 
         private void SendMail(string idPrefix, string synopsis, string message, params string[] attachedItemQiids)
         {

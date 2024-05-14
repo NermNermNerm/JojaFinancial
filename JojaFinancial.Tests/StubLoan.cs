@@ -14,7 +14,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
         public List<(Season season, int year, int payment)> EnsureTermsHaveBeenDelivered()
         {
-            var mailItem = this.StubMailer.SentMail.Find(m => m.IdPrefix == "terms");
+            var mailItem = this.StubMailer.SentMail.Find(m => m.IdPrefix.StartsWith("terms"));
             Assert.IsNotNull(mailItem, "Terms mail was not delivered");
 
             List<(Season season, int year, int payment)> result = new();
@@ -27,6 +27,10 @@ namespace StardewValleyMods.JojaFinancial.Tests
             }
 
             int expectedPayments = this.Mod.Game1.Date.DayOfMonth >= Loan.PaymentDueDayOfSeason ? 7 : 8;
+            if (mailItem.IdPrefix == "terms.LoanScheduleThreeYear")
+            {
+                expectedPayments += 4;
+            }
             Assert.AreEqual(expectedPayments, result.Count, $"Expected {expectedPayments} payments, but found {result.Count}");
 
             this.StubMailer.SentMail.Remove(mailItem);

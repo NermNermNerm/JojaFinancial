@@ -193,8 +193,10 @@ namespace StardewValleyMods.JojaFinancial
             else
             {
                 this.PhoneDialog(message, [
-                    new PhoneMenuItem("Get the loan terms", this.HandleGetLoanTerms),
-                    new PhoneMenuItem("Start the loan", this.HandleStartTheLoan),
+                    new PhoneMenuItem("Get the 2-year loan terms", () => this.HandleGetLoanTerms(new LoanScheduleTwoYear())),
+                    new PhoneMenuItem("Get the 3-year loan terms", () => this.HandleGetLoanTerms(new LoanScheduleThreeYear())),
+                    new PhoneMenuItem("Start a 2-year loan", () => this.HandleStartTheLoan(new LoanScheduleTwoYear())),
+                    new PhoneMenuItem("Start a 3-year loan", () => this.HandleStartTheLoan(new LoanScheduleThreeYear())),
                 ]);
             }
         }
@@ -230,16 +232,16 @@ namespace StardewValleyMods.JojaFinancial
             }
         }
 
-        private void HandleGetLoanTerms()
+        private void HandleGetLoanTerms(ILoanSchedule schedule)
         {
-            this.Mod.Loan.SendMailLoanTerms();
+            this.Mod.Loan.SendMailLoanTerms(schedule);
             this.PhoneDialog($"Great!  I just mailed to you the loan terms, you should have them tomorrow morning!  Call us back before the end of the month to lock in these low rates!",
                 () => this.MainMenu("Is there anything else we can do for you?"));
         }
 
-        private void HandleStartTheLoan()
+        private void HandleStartTheLoan(ILoanSchedule schedule)
         {
-            this.Mod.Loan.InitiateLoan();
+            this.Mod.Loan.InitiateLoan(schedule);
             this.PhoneDialog($"Great!  I just mailed to you the catalogs and started your loan!  Remember to make your payments by the {Loan.PaymentDueDayString} of every month or you can set up auto-pay !",
                 () => this.MainMenu("Is there anything else we can do for you?"));
         }
