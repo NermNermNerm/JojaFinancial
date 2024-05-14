@@ -331,10 +331,12 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             messageBuilder.AppendLine($" Loan Amount: {loanAmount}g");
             messageBuilder.AppendLine($" Fees");
             int balance = loanAmount;
+            int totalFeesAndInterest = 0;
             foreach (var pair in this.GetFees(schedule, loanAmount))
             {
                 messageBuilder.AppendLine($"  {pair.amount}g {pair.name}");
                 balance += pair.amount;
+                totalFeesAndInterest += pair.amount;
             }
             messageBuilder.AppendLine($" Opening Balance: {balance}g");
 
@@ -354,11 +356,15 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
 
                     int interest = (int)(balance * schedule.GetInterestRate(currentSeason - startingSeason));
                     balance += interest;
+                    totalFeesAndInterest += interest;
                     messageBuilder.AppendLine($" Interest: {interest}g");
 
                     messageBuilder.AppendLine($" Remaining balance: {balance}g");
                 }
             }
+
+            messageBuilder.AppendLine();
+            messageBuilder.AppendLine($"Total cost of loan (fees+interest): {totalFeesAndInterest}");
 
             this.SendMail("terms." + schedule.GetType().Name, "Furniture loan terms", messageBuilder.ToString());
         }
