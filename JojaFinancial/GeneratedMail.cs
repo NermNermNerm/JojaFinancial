@@ -44,7 +44,8 @@ namespace StardewValleyMods.JojaFinancial
         public virtual void SendMail(string idPrefix, string synopsis, string message, params (string qiid, int count)[] attachedItems)
         {
             string mailKey = $"{idPrefix}.{Game1.Date.Year}.{Game1.Date.SeasonIndex}.{Game1.Date.DayOfMonth}";
-            string value = message.Replace("\r", "").Replace("\n", "^");
+            // [letterbg 4] adds the joja letterhead
+            string value = "[letterbg 4]" + message.Replace("\r", "").Replace("\n", "^");
 
             foreach (var pair in attachedItems)
             {
