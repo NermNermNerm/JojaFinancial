@@ -104,21 +104,31 @@ end fade
         {
             void issueError(string message)
             {
-                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration ('{ModEntry.Config.Catalogs}') is bad: {message}");
-                this.LogError($"Bad configuration ('{ModEntry.Config.Catalogs}'): {message}");
+                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration is bad: {message}");
+                this.LogError($"Bad configuration: {message}");
             }
             void issueWarning(string message)
             {
-                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration ('{ModEntry.Config.Catalogs}') is suspicious: {message}");
-                this.LogWarning($"Suspicious configuration ('{ModEntry.Config.Catalogs}'): {message}");
+                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration is suspicious: {message}");
+                this.LogWarning($"Suspicious configuration: {message}");
             }
 
-            string[] splits = Config.Catalogs.Split(new char[] { ',', ' ', ';' }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
             List<StardewValley.Object> result = new();
-            foreach (string id in splits)
+
+            (bool isEnabled, string qiid)[] pairs = [
+                (Config.UseRobinsFurnitureCatalogue, "(F)1226"),
+                (Config.UsePierresWallpaperCatalogue, "(F)1308"),
+                (Config.UseJojaCatalogue, "(F)JojaCatalogue"),
+                (Config.UseWizardCatalogue, "(F)WizardCatalogue"),
+                (Config.UseJunimoCatalogue, "(F)JunimoCatalogue"),
+                (Config.UseRetroCatalogue, "(F)RetroCatalogue")];
+            var stockQiids = pairs.Where(p => p.isEnabled).Select(p => p.qiid);
+
+            string?[] givenModQiids = [Config.ModCatalog1, Config.ModCatalog2, Config.ModCatalog3, Config.ModCatalog4, Config.ModCatalog5, Config.ModCatalog6];
+            var modIds = givenModQiids.Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s!);
+
+            foreach (string qiid in stockQiids.Union(modIds).Distinct())
             {
-                string qiid = ItemRegistry.IsQualifiedItemId(id) ? id : ItemRegistry.type_furniture + id;
                 var item = this.Game1.CreateObject(qiid, 1);
                 if (item is null || item.Name == "ErrorItem")
                 {
@@ -126,11 +136,7 @@ end fade
                 }
                 else
                 {
-                    if (item.Price <= 0)
-                    {
-                        issueWarning($"Warning: '{qiid}' ('{item.DisplayName}') does not have a configured price?!");
-                    }
-                    else if (item.Price <= 10000)
+                    if (item.Price <= 10000)
                     {
                         int shopPrice = this.GetShopPrice(item);
                         if (shopPrice > 0 && shopPrice <= 10000)
