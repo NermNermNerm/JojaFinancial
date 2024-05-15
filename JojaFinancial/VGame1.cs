@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StardewValley;
+using StardewValley.Objects;
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -41,10 +42,5 @@ namespace StardewValleyMods.JojaFinancial
 
         public virtual StardewValley.Object CreateObject(string itemId, int quantity)
             => ItemRegistry.Create<StardewValley.Object>(itemId, quantity);
-
-        public virtual int? GetPriceOfItem(string itemId)
-        {
-            return ItemRegistry.Create<StardewValley.Object>(itemId)?.Price;
-        }
     }
 }

@@ -301,7 +301,7 @@ In order to avoid a penalty fee and possible interest rate increases, pay this a
         }
 
         private int GetTotalCostOfCatalogs()
-            => this.Mod.Game1.GetPriceOfItem("(F)1226")!.Value + this.Mod.Game1.GetPriceOfItem("(F)1308")!.Value;
+            => this.Mod.GetConfiguredCatalogs().Sum(i => i.Price);
 
         public void SendMailLoanTerms(ILoanSchedule schedule)
         {
@@ -364,7 +364,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
             }
 
             messageBuilder.AppendLine();
-            messageBuilder.AppendLine($"Total cost of loan (fees+interest): {totalFeesAndInterest}");
+            messageBuilder.AppendLine($"Total cost of loan (fees and interest): {totalFeesAndInterest}g");
 
             this.SendMail("terms." + schedule.GetType().Name, "Furniture loan terms", messageBuilder.ToString());
         }
@@ -401,8 +401,7 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
                 @"JojaFinancial is so pleased that you have taken your first steps towards comfortable living and a solid credit rating!  Watch your mail in the coming months for reminders about making your EZ Payments later on this year.
 
                 - the JojaFinancial Team",
-                "(F)1226",
-                "(F)1308");
+                this.Mod.GetConfiguredCatalogs().Select(i => i.QualifiedItemId).ToArray());
         }
 
         // Possibly allow a refinance to different terms at some point.

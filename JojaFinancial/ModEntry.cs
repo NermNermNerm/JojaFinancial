@@ -1,12 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData.Shops;
 
 // TODO:
 //  Add Debug function to pump out all the mails to validate the text.
-//  Offer 3-year loan
 //  i18n
-//  Configurable initial catalogs
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -15,6 +17,9 @@ namespace StardewValleyMods.JojaFinancial
     {
         private const string StartLoanEventCommand = "JojaFinance.StartLoan";
         private const string MorrisOffersLoanEvent = "JojaFinance.MorrisOffer";
+
+        public static ModConfig Config = null!;
+        public ModConfigMenu ConfigMenu = new ModConfigMenu();
 
         public VGame1 Game1 { get; private set; }
         public Loan Loan { get; }
@@ -36,6 +41,9 @@ namespace StardewValleyMods.JojaFinancial
 
         public override void Entry(IModHelper helper)
         {
+            Config = this.Helper.ReadConfig<ModConfig>();
+            this.ConfigMenu.Entry(this);
+
             this.Helper.Events.Content.AssetRequested += this.OnAssetRequested;
             Event.RegisterCommand(StartLoanEventCommand, this.StartLoan);
 
@@ -46,7 +54,6 @@ namespace StardewValleyMods.JojaFinancial
 
         private void StartLoan(Event @event, string[] args, EventContext context)
         {
-
             try
             {
                 this.LogInfo("Loan initiated");
@@ -90,6 +97,85 @@ end fade
 ".Replace("\r", "").Replace("\n", "/");
                 });
             }
+        }
+
+
+        public List<StardewValley.Object> GetConfiguredCatalogs()
+        {
+            void issueError(string message)
+            {
+                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration ('{ModEntry.Config.Catalogs}') is bad: {message}");
+                this.LogError($"Bad configuration ('{ModEntry.Config.Catalogs}'): {message}");
+            }
+            void issueWarning(string message)
+            {
+                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration ('{ModEntry.Config.Catalogs}') is suspicious: {message}");
+                this.LogWarning($"Suspicious configuration ('{ModEntry.Config.Catalogs}'): {message}");
+            }
+
+            string[] splits = Config.Catalogs.Split(new char[] { ',', ' ', ';' }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+            List<StardewValley.Object> result = new();
+            foreach (string id in splits)
+            {
+                string qiid = ItemRegistry.IsQualifiedItemId(id) ? id : ItemRegistry.type_furniture + id;
+                var item = this.Game1.CreateObject(qiid, 1);
+                if (item is null || item.Name == "ErrorItem")
+                {
+                    issueError($"'{qiid}' Is not a known Stardew Valley object.");
+                }
+                else
+                {
+                    if (item.Price <= 0)
+                    {
+                        issueWarning($"Warning: '{qiid}' ('{item.DisplayName}') does not have a configured price?!");
+                    }
+                    else if (item.Price <= 10000)
+                    {
+                        int shopPrice = this.GetShopPrice(item);
+                        if (shopPrice > 0 && shopPrice <= 10000)
+                        {
+                            issueWarning($"Warning: '{qiid}' ('{item.DisplayName}') is priced at {item.Price}, which seems cheap.  It was found in a shop for {shopPrice}, which is also seems too cheap.");
+                        }
+                        else if (shopPrice == 0)
+                        {
+                            issueWarning($"Warning: '{qiid}' ('{item.DisplayName}') is priced at {item.Price}, which seems cheap.  There isn't any shop that carries it either.");
+                        }
+                        else
+                        {
+                            item.Price = shopPrice;
+                        }
+                    }
+
+                    result.Add(item);
+                }
+            }
+
+            if (!result.Any())
+            {
+                issueError("No valid catalog entries supplied - defaulting to the base game catalogs.");
+                result.Add(this.Game1.CreateObject("(F)1226", 1)!);
+                result.Add(this.Game1.CreateObject("(F)1308", 1)!);
+            }
+
+            return result;
+        }
+
+        private int GetShopPrice(StardewValley.Object item)
+        {
+            foreach (var value in DataLoader.Shops(StardewValley.Game1.content).Values)
+            {
+                foreach (ShopItemData shopItemData in value.Items)
+                {
+                    if (shopItemData.ItemId == item.QualifiedItemId)
+                    {
+                        this.LogTrace($"Found {item.QualifiedItemId} in {value.Owners.FirstOrDefault()?.Name}'s shop at {shopItemData.Price}");
+                        return shopItemData.Price;
+                    }
+                }
+            }
+
+            return 0;
         }
 
         public void WriteToLog(string message, LogLevel level, bool isOnceOnly)

@@ -1,6 +1,7 @@
 using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewValleyMods.JojaFinancial;
 
 namespace JojaFinancial.Tests
 {
@@ -88,12 +89,12 @@ namespace JojaFinancial.Tests
 
         TConfig IModHelper.ReadConfig<TConfig>()
         {
-            throw new NotImplementedException();
+            object o = new ModConfig();
+            return (TConfig)o;
         }
 
         void IModHelper.WriteConfig<TConfig>(TConfig config)
         {
-            throw new NotImplementedException();
         }
     }
 
