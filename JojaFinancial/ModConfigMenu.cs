@@ -39,116 +39,116 @@ namespace StardewValleyMods.JojaFinancial
 
             configMenu.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Base game furniture",
+                name: I18n.ModConfig_BaseGameFurniture,
                 getValue: () => Config.UseRobinsFurnitureCatalogue,
                 setValue: value => Config.UseRobinsFurnitureCatalogue = value,
-                tooltip: () => "The catalog Robin sells (200000g)"
+                tooltip: I18n.ModConfig_BaseGameFurnitureTip
             );
             configMenu.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Base game wallpaper and floor",
+                name: I18n.ModConfig_BaseGameWallpaper,
                 getValue: () => Config.UsePierresWallpaperCatalogue,
                 setValue: value => Config.UsePierresWallpaperCatalogue = value,
-                tooltip: () => "The catalog Pierre sells (20000g)"
+                tooltip: I18n.ModConfig_BaseGameWallpaperTip
             );
             configMenu.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Joja",
+                name: I18n.ModConfig_Joja,
                 getValue: () => Config.UseJojaCatalogue,
                 setValue: value => Config.UseJojaCatalogue = value,
-                tooltip: () => "The Joja Furniture catalog (25000g)"
+                tooltip: I18n.ModConfig_JojaTip
             );
             configMenu.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Wizard",
+                name: I18n.ModConfig_Wizard,
                 getValue: () => Config.UseWizardCatalogue,
                 setValue: value => Config.UseWizardCatalogue = value,
-                tooltip: () => "The Wizard furniture catalog sold by Krobus (150000g)"
+                tooltip: I18n.ModConfig_WizardTip
             );
             configMenu.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Retro",
+                name: I18n.ModConfig_Retro,
                 getValue: () => Config.UseRetroCatalogue,
                 setValue: value => Config.UseRetroCatalogue = value,
-                tooltip: () => "Retro furniture sold by the traveling cart (110000g)"
+                tooltip: I18n.ModConfig_RetroTip
             );
 
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog1 ?? "",
                 setValue: value => {
                     Config.ModCatalog1 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog2 ?? "",
                 setValue: value => {
                     Config.ModCatalog2 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog3 ?? "",
                 setValue: value => {
                     Config.ModCatalog3 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog3 ?? "",
                 setValue: value => {
                     Config.ModCatalog3 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog4 ?? "",
                 setValue: value => {
                     Config.ModCatalog4 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog5 ?? "",
                 setValue: value => {
                     Config.ModCatalog5 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
             configMenu.AddTextOption(
                 mod: ModManifest,
-                name: () => "Mod Catalog Qualified Item Id",
+                name: I18n.ModConfig_ModCatalog,
                 getValue: () => Config.ModCatalog6 ?? "",
                 setValue: value => {
                     Config.ModCatalog6 = value;
                     // Spew errors ASAP.
                     _ = this.mod.GetConfiguredCatalogs();
                 },
-                tooltip: () => "An 'ItemId' of a furniture catalog supplied by a mod"
+                tooltip: I18n.ModConfig_ModCatalogTip
             );
         }
     }

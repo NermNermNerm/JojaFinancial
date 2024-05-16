@@ -61,6 +61,7 @@ namespace StardewValleyMods.JojaFinancial
         {
             try
             {
+                this.Loan.InitiateLoan(new LoanScheduleTwoYear());
                 this.LogInfo("Loan initiated");
             }
             finally
@@ -76,14 +77,13 @@ namespace StardewValleyMods.JojaFinancial
                 e.Edit((data) =>
                 {
                     var dict = data.AsDictionary<string, string>().Data;
-                    dict[$"{MorrisOffersLoanEvent}/t 600 930/w sunny/d Mon Tue"] = $@"
+                    dict[$"{MorrisOffersLoanEvent}/t 600 930/w sunny/d Mon Tue"] = I18n.ModEntry_MorrisVisitEvent();
+                    /* $@"
 continue
 64 15
 farmer 64 15 2 Morris 65 16 0
-
 setskipactions addItem (BC)214
 skippable
-
 speak Morris ""Welcome to the Valley!  It is my pleasure to welcome you to our community on behalf of the whole Joja Team!#$b#Please accept this telephone as a housewarming gift from your friends at your local Jojamart!""
 addItem (BC)214
 speak Morris ""While I'm here, I thought I'd tell you about a SPECIAL OFFER, EXCLUSIVELY for new residents of Stardew Valley!#$b#We'd you to have a complete Wallpaper and Furniture Catalog for ABSOLUTELY NO MONEY DOWN and NO PAYMENTS for TWO SEASONS!$1""
@@ -99,7 +99,7 @@ speak Morris ""Once again, Welcome to Stardew Valley and we look forward to seei
 pause 200
 faceDirection Morris 1
 end fade
-".Replace("\r", "").Replace("\n", "/");
+".Replace("\r", "").Replace("\n", "/"); */
                 });
             }
         }
