@@ -7,8 +7,11 @@ using StardewValley;
 using StardewValley.GameData.Shops;
 
 // TODO:
+//  Check whether get-balance works right in cases where payment is already paid.
+//  Check whether make-payment works right after payment was made.
 //  Add Debug function to pump out all the mails to validate the text.
 //  i18n
+
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -41,6 +44,8 @@ namespace StardewValleyMods.JojaFinancial
 
         public override void Entry(IModHelper helper)
         {
+            I18n.Init(helper.Translation);
+
             Config = this.Helper.ReadConfig<ModConfig>();
             this.ConfigMenu.Entry(this);
 

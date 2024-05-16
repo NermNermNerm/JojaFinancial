@@ -37,7 +37,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year loan terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year-loan terms");
 
             this.stubGame1.AdvanceDay();
 
@@ -81,7 +81,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("3-year loan terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("3-year-loan terms");
 
             this.stubGame1.AdvanceDay();
 
@@ -122,7 +122,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Start a couple seasons late, and late in the season too
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Fall, 27));
 
-            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year loan terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year-loan terms");
             this.stubGame1.AdvanceDay();
             var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
 
@@ -231,7 +231,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
 
             // Player asks for the terms
-            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year loan terms");
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year-loan terms");
 
             this.stubGame1.AdvanceDay();
 
@@ -261,7 +261,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
                     int balanceBeforeMissingPayment = this.stubLoan.RemainingBalance;
                     this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason + 1));
                     this.stubLoan.AssertGotMissedPaymentMail();
-                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.LateFee, this.stubLoan.RemainingBalance); // Late fee is assessed
+                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.MissedPaymentFee, this.stubLoan.RemainingBalance); // Late fee is assessed
                 }
             }
 

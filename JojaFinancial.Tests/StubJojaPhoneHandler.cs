@@ -77,13 +77,32 @@ namespace JojaFinancial.Tests
             doAfter();
         }
 
-        public void AssertPaymentAndBalance(int payment, int balance)
+        public void AssertPaymentAndBalance(int expectedPayment, int expectedBalance)
+        {
+            this.GivenPlayerGetsPaymentAndBalance(out int actualPayment, out int actualBalance);
+            Assert.AreEqual(expectedPayment, actualPayment);
+            Assert.AreEqual(expectedBalance, actualBalance);
+        }
+
+        public void GivenPlayerGetsPaymentAndBalance(out int payment, out int balance)
         {
             this.GivenPlayerMakesMainMenuChoices("balance and minimum payment");
-            var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment is (?<payment>\d+)g", RegexOptions.IgnoreCase).Match(this.Messages[1]);
-            Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
-            Assert.AreEqual(payment, int.Parse(match.Groups["payment"].Value));
-            Assert.AreEqual(balance, int.Parse(match.Groups["balance"].Value));
+            string response = this.Messages[1];
+            var match = new Regex(@"balance is (?<balance>\d+)g.", RegexOptions.IgnoreCase).Match(response);
+            Assert.IsTrue(match.Success, $"The balance and minimum payment response is unreadable: {response}");
+            balance = int.Parse(match.Groups["balance"].Value);
+
+            match = new Regex(@"No.*payments can be made", RegexOptions.IgnoreCase).Match(response);
+            if (match.Success)
+            {
+                payment = 0;
+            }
+            else
+            {
+                match = new Regex(@"minimum payment is (?<payment>\d+)g", RegexOptions.IgnoreCase).Match(response);
+                Assert.IsTrue(match.Success, $"The balance and minimum payment response is unreadable: {response}");
+                payment = int.Parse(match.Groups["payment"].Value);
+            }
         }
 
         public void GivenPlayerSetsUpAutopay()

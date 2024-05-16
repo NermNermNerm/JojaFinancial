@@ -46,7 +46,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
         public void AssertGotAutoPaySuccessMail()
         {
-            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis == "Autopay Succeeded", "AutoPay success");
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis.StartsWith("Autopay Succeeded"), "AutoPay success");
             if (this.RemainingBalance > 0)
             {
                 this.StubMailer.AssertNoMoreMail();
@@ -56,7 +56,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
         public void AssertGotAutoPayFailedMail()
         {
-            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis == "Auto-pay Failed!" && m.Message.Contains(this.MinimumPayment.ToString()), "AutoPay success");
+            var mailItem = this.StubMailer.EnsureSingleMatchingItemWasDelivered(m => m.Synopsis.StartsWith("Auto-pay Failed!") && m.Message.Contains(this.MinimumPayment.ToString()), "AutoPay success");
             this.StubMailer.AssertNoMoreMail();
         }
 
@@ -99,7 +99,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
         {
             _ = this.StubMailer.EnsureSingleMatchingItemWasDelivered(
                 m => m.Synopsis.Contains("Missed payment", StringComparison.OrdinalIgnoreCase)
-                     && m.Message.Contains(Loan.LateFee.ToString())
+                     && m.Message.Contains(Loan.MissedPaymentFee.ToString())
                 , "Missed Payment Message");
 
         }

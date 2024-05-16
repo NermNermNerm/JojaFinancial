@@ -85,7 +85,7 @@ namespace JojaFinancial.Tests
 
         IMultiplayerHelper IModHelper.Multiplayer => throw new NotImplementedException();
 
-        ITranslationHelper IModHelper.Translation => throw new NotImplementedException();
+        ITranslationHelper IModHelper.Translation => new StubTranslationHelper();
 
         TConfig IModHelper.ReadConfig<TConfig>()
         {
