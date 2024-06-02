@@ -41,10 +41,10 @@ namespace StardewValleyMods.JojaFinancial
         public override void Entry(IModHelper helper)
         {
             Initialize(() => helper.Translation.Locale);
-            OnBadTranslation += (message) => this.Monitor.LogOnce(IF($"Translation error: {message}"), LogLevel.Info);
-            OnTranslationFilesCorrupt += (message) => this.Monitor.LogOnce(IF($"Translation error: {message}"), LogLevel.Error);
+            OnBadTranslation += (message) => this.Monitor?.LogOnce(IF($"Translation error: {message}"), LogLevel.Info);
+            OnTranslationFilesCorrupt += (message) => this.Monitor?.LogOnce(IF($"Translation error: {message}"), LogLevel.Error);
 #if DEBUG
-            DoPseudoLoc = true;
+            DoPseudoLoc = this.Monitor is not null; // Monitor is null iff we're in our test code.
 #endif
 
             Config = this.Helper.ReadConfig<ModConfig>();

@@ -1,6 +1,7 @@
 using System;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewValley;
 using StardewValleyMods.JojaFinancial;
 
 namespace JojaFinancial.Tests
@@ -61,6 +62,35 @@ namespace JojaFinancial.Tests
             ISpecializedEvents IModEvents.Specialized => throw new NotImplementedException();
         }
 
+        private class StubTranslationHelper : ITranslationHelper
+        {
+            public string Locale => "";
+
+            public LocalizedContentManager.LanguageCode LocaleEnum => throw new NotImplementedException();
+
+            public string ModID => throw new NotImplementedException();
+
+            public Translation Get(string key)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Translation Get(string key, object? tokens)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDictionary<string, Translation> GetInAllLocales(string key, bool withFallback = false)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<Translation> GetTranslations()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public StubGameContent StubGameContent { get; } = new StubGameContent();
 
         string IModHelper.DirectoryPath => throw new NotImplementedException();
@@ -85,7 +115,7 @@ namespace JojaFinancial.Tests
 
         IMultiplayerHelper IModHelper.Multiplayer => throw new NotImplementedException();
 
-        ITranslationHelper IModHelper.Translation => throw new NotImplementedException();
+        ITranslationHelper IModHelper.Translation { get; } = new StubTranslationHelper();
 
         TConfig IModHelper.ReadConfig<TConfig>()
         {
