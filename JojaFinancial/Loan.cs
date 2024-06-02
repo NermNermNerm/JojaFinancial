@@ -8,6 +8,8 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.GameData.Buildings;
 
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+
 namespace StardewValleyMods.JojaFinancial
 {
     public class Loan : ISimpleLog
@@ -24,9 +26,7 @@ namespace StardewValleyMods.JojaFinancial
         private const int LastDayOfSeason = 28;
         public const int PaymentDueDayOfSeason = 21;
         public const int PrepareStatementDayOfSeason = 13;
-        public const string PaymentDueDayString = "21st";
         public const int AutoPayDayOfSeason = 16;
-        public const string AutoPayDayString = "16th";
 
         public const int LateFee = 5000;
 
@@ -49,11 +49,11 @@ namespace StardewValleyMods.JojaFinancial
                     var buildingData = editor.AsDictionary<string, BuildingData>().Data;
                     if (Game1.player is null)
                     {
-                        this.LogTrace("Skipping modifying the gold clock - the player doesn't exist yet.");
+                        this.LogTrace($"Skipping modifying the gold clock - the player doesn't exist yet.");
                         return;
                     }
 
-                    if (!buildingData.TryGetValue("Gold Clock", out BuildingData? goldClock))
+                    if (!buildingData.TryGetValue(I("Gold Clock"), out BuildingData? goldClock))
                     {
                         this.LogWarning($"The gold clock purchase can't be disabled - it doesn't exist.");
                         return;
@@ -67,14 +67,14 @@ namespace StardewValleyMods.JojaFinancial
                             this.LogTrace($"Storing '{oldGoldClockBuilder}' as the builder for the gold clock.");
                         }
 
-                        this.LogTrace("Disabling the gold clock as the loan is underway");
+                        this.LogTrace($"Disabling the gold clock as the loan is underway");
                         goldClock.Builder = null;
                     }
                     else
                     {
                         if (goldClock.Builder is null)
                         {
-                            goldClock.Builder = oldGoldClockBuilder ?? "Wizard";
+                            goldClock.Builder = oldGoldClockBuilder ?? I("Wizard");
                             this.LogTrace($"Re-enabling the gold clock by setting it to {goldClock.Builder} - stashed value was {oldGoldClockBuilder}");
                         }
                     }
@@ -119,7 +119,7 @@ namespace StardewValleyMods.JojaFinancial
                     break;
                 case LastDayOfSeason:
                     this.ClearPaidThisSeason();
-                    this.ChangeLoanBalance((int)(this.RemainingBalance * this.Schedule.GetInterestRate(this.GetSeasonsSinceOrigination())), "Interest");
+                    this.ChangeLoanBalance((int)(this.RemainingBalance * this.Schedule.GetInterestRate(this.GetSeasonsSinceOrigination())), L("Interest"));
                     break;
             }
         }
@@ -154,7 +154,7 @@ namespace StardewValleyMods.JojaFinancial
             if (this.Mod.Game1.PlayerMoney >= amount)
             {
                 this.Mod.Game1.PlayerMoney -= amount;
-                this.ChangeLoanBalance(-amount, "Payment");
+                this.ChangeLoanBalance(-amount, L("Payment"));
                 this.ChangePaidThisSeason(amount);
                 if (this.GetBalance() == 0)
                 {
@@ -180,7 +180,7 @@ namespace StardewValleyMods.JojaFinancial
 
         private void AssessLateFee()
         {
-            this.ChangeLoanBalance(LateFee, "Late Fee");
+            this.ChangeLoanBalance(LateFee, L("Late Fee"));
             this.SendMailMissedPayment();
             // TODO: Carry over minimum payment to next Season?
         }
@@ -244,71 +244,78 @@ namespace StardewValleyMods.JojaFinancial
             string ledger = this.Mod.Game1.GetPlayerModData(SeasonLedgerModKey) ?? "";
             int paymentDue = Math.Max(0, this.MinimumPayment - (this.GetPaidThisSeason() ?? 0));
             StringBuilder content = new StringBuilder();
-            content.AppendLine($"Here is your complimentary JojaFinancial Furniture loan statement for {this.Mod.Game1.Date.Season.ToString()} of year {this.Mod.Game1.Date.Year}.");
+            content.AppendLine(LF($"Here is your complimentary JojaFinancial Furniture loan statement for {this.SeasonAndYear()}."));
             content.AppendLine();
             if (paymentDue > 0)
             {
-                content.Append($"Your minimum payment, due before the {PaymentDueDayString} of this season is: {paymentDue}g.");
+                content.Append(LF($"Your minimum payment, due before the 21st of this season is: {paymentDue}g."));
                 if (this.IsOnAutoPay)
                 {
-                    content.Append($"  This amount will be automatically deducted on the {AutoPayDayOfSeason}.");
+                    content.Append(LF($"  This amount will be automatically deducted on the {AutoPayDayOfSeason}."));
                 }
                 content.AppendLine();
             }
             else
             {
-                content.AppendLine($"No payment is necessary this season.");
+                content.AppendLine(L("No payment is necessary this season."));
             }
             content.AppendLine();
-            content.AppendLine($"Loan Balance: {this.GetBalance() ?? 0}");
+            content.AppendLine(LF($"Loan Balance: {this.GetBalance() ?? 0}"));
             content.AppendLine();
-            content.AppendLine("Activity:");
+            content.AppendLine(L("Activity:"));
             content.AppendLine(ledger);
 
             this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Mod.Game1.Date.Season.ToString()} year {this.Mod.Game1.Date.Year} statement", content.ToString());
+            this.SendMail(I("statement"), LF($"{this.SeasonAndYear()} statement"), content.ToString());
         }
 
         private void SendLoanPaidOffMail()
         {
             string ledger = this.Mod.Game1.GetPlayerModData(SeasonLedgerModKey) ?? "";
             StringBuilder content = new StringBuilder();
-            content.AppendLine("Your JojaFinancial Furniture Loan is paid in full!  We know you have choices, and we're super-happy that you chose us.  Almost as happy as we are to have all that money!");
+            content.AppendLine(L("Your JojaFinancial Furniture Loan is paid in full!  We know you have choices, and we're super-happy that you chose us.  Almost as happy as we are to have all that money!"));
             content.AppendLine();
-            content.AppendLine("Activity:");
+            content.AppendLine(L("Activity:"));
             content.AppendLine(ledger);
 
             this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
-            this.SendMail("statement", $"{this.Mod.Game1.Date.Season.ToString()} year {this.Mod.Game1.Date.Year} statement", content.ToString());
+            this.SendMail(I("statement"), LF($"{this.SeasonAndYear()} statement"), content.ToString());
             this.InvalidateBuildingData();
         }
 
         private void SendMailAutoPaySucceeded(int amountPaid)
         {
-            this.SendMail("autopay", "Autopay Succeeded", $@"Thank you for participating in JojaFinancial's AutoPay system!
-Your payment of {amountPaid} was processed on the {AutoPayDayString}.");
+            this.SendMail(I("autopay"), L("Autopay Succeeded"), LF($@"Thank you for participating in JojaFinancial's AutoPay system!
+Your payment of {amountPaid} was processed on the 16th."));
         }
 
         private void SendMailAutoPayFailed(int amountOwed)
         {
-            this.SendMail("autopay", "Auto-pay Failed!", $@"ALERT!  Your JojaFinancial Loan Automatic Payment of {amountOwed}g did not go through!
-In order to avoid a penalty fee and possible interest rate increases, pay this amount by calling JojaFinancial's Super-Helpful Phone Assistant(tm) on or before the {PaymentDueDayString} of this month.");
+            this.SendMail(I("autopay"), L("Auto-pay Failed!"), LF($@"ALERT!  Your JojaFinancial Loan Automatic Payment of {amountOwed}g did not go through!
+In order to avoid a penalty fee and possible interest rate increases, pay this amount by calling JojaFinancial's Super-Helpful Phone Assistant(tm) on or before the 21st of this month."));
         }
 
         private void SendMailMissedPayment()
         {
-            this.SendMail("payment", "Missed Payment!", $@"CREDIT DISASTER IMPENDING!  You missed your payment for this season, and a fee of {LateFee}g has been imposed and added to your outstanding balance.");
+            this.SendMail(I("payment"), L("Missed Payment!"), LF($@"CREDIT DISASTER IMPENDING!  You missed your payment for this season, and a fee of {LateFee}g has been imposed and added to your outstanding balance."));
         }
 
         private int GetTotalCostOfCatalogs()
             => this.Mod.GetConfiguredCatalogs().Sum(i => i.Price);
+
+        private static string Loc(Season season)
+            => season switch { Season.Spring => L("Spring"), Season.Summer => L("Summer"), Season.Fall => L("Fall"), _ => L("Winter") };
+
+        private static string SeasonAndYear(WorldDate date) => LF($"{Loc(date.Season)} of year {date.Year}");
+
+        private string SeasonAndYear() => SeasonAndYear(this.Mod.Game1.Date);
 
         public void SendMailLoanTerms(ILoanSchedule schedule)
         {
             int loanAmount = this.GetTotalCostOfCatalogs();
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(
-@"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
+L(@"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
 Call the Joja Super-Helpful Phone Assistant today to get your life of comfort in the mail tomorrow with no up-front fees,
 no down-payment, no payments at all for the first two seasons, and no interest for the first season!
 
@@ -322,23 +329,21 @@ to allow us to give you two seasons with ZERO PAYMENTS!
 There's a whole bunch of fine print below that you should definitely read.  If you do, please tell us and
 we'll work harder in the future to make it even longer and finer so you won't next time.  What you really
 want to do now is call up the Super-Helpful Phone Assistant and kick off this loan to bring yourself the
-comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n", " ").Replace("||", "\n\n"));
+comforts of tomorrow today!").Replace("\r", "").Replace("\n\n", "||").Replace("\n", " ").Replace("||", "\n\n"));
             messageBuilder.AppendLine();
 
-            string seasonAndYear(WorldDate date) => $"{date.Season} of year {date.Year}";
-
-            messageBuilder.AppendLine(seasonAndYear(this.Mod.Game1.Date));
-            messageBuilder.AppendLine($" Loan Amount: {loanAmount}g");
-            messageBuilder.AppendLine($" Fees");
+            messageBuilder.AppendLine(this.SeasonAndYear());
+            messageBuilder.AppendLine(LF($" Loan Amount: {loanAmount}g"));
+            messageBuilder.AppendLine(L(" Fees"));
             int balance = loanAmount;
             int totalFeesAndInterest = 0;
             foreach (var pair in this.GetFees(schedule, loanAmount))
             {
-                messageBuilder.AppendLine($"  {pair.amount}g {pair.name}");
+                messageBuilder.AppendLine(LF($"  {pair.amount}g {pair.name}"));
                 balance += pair.amount;
                 totalFeesAndInterest += pair.amount;
             }
-            messageBuilder.AppendLine($" Opening Balance: {balance}g");
+            messageBuilder.AppendLine(LF($" Opening Balance: {balance}g"));
 
             // The *Season variables here are really season+year*4.
             int startingSeason = this.Mod.Game1.Date.TotalWeeks / 4;
@@ -348,40 +353,40 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
                 if (paymentDate > this.Mod.Game1.Date)
                 {
                     messageBuilder.AppendLine();
-                    messageBuilder.AppendLine(seasonAndYear(paymentDate));
+                    messageBuilder.AppendLine(SeasonAndYear(paymentDate));
 
                     int payment = schedule.GetMinimumPayment(currentSeason - startingSeason, balance);
-                    messageBuilder.AppendLine($" Payment: -{payment}g");
+                    messageBuilder.AppendLine(LF($" Payment: -{payment}g"));
                     balance -= payment;
 
                     int interest = (int)(balance * schedule.GetInterestRate(currentSeason - startingSeason));
                     balance += interest;
                     totalFeesAndInterest += interest;
-                    messageBuilder.AppendLine($" Interest: {interest}g");
+                    messageBuilder.AppendLine(LF($" Interest: {interest}g"));
 
-                    messageBuilder.AppendLine($" Remaining balance: {balance}g");
+                    messageBuilder.AppendLine(LF($" Remaining balance: {balance}g"));
                 }
             }
 
             messageBuilder.AppendLine();
-            messageBuilder.AppendLine($"Total cost of loan (fees and interest): {totalFeesAndInterest}g");
+            messageBuilder.AppendLine(LF($"Total cost of loan (fees and interest): {totalFeesAndInterest}g"));
 
-            this.SendMail("terms." + schedule.GetType().Name, "Furniture loan terms", messageBuilder.ToString());
+            this.SendMail(I("terms.") + schedule.GetType().Name, L("Furniture loan terms"), messageBuilder.ToString());
         }
 
         private IEnumerable<(string name, int amount)> GetFees(ILoanSchedule schedule, int loanAmount)
         {
-            yield return ("Loan origination fee", schedule.GetLoanOriginationFeeAmount(loanAmount));
-            yield return ("SuperHelpful phone service fee", 1700);
-            yield return ("Personal visit fee", 1300);
-            yield return ("Statement preparation fee", 1000);
-            yield return ("Complimentary phone fee", 1000);
+            yield return (L("Loan origination fee"), schedule.GetLoanOriginationFeeAmount(loanAmount));
+            yield return (L("SuperHelpful phone service fee"), 1700);
+            yield return (L("Personal visit fee"), 1300);
+            yield return (L("Statement preparation fee"), 1000);
+            yield return (L("Complimentary phone fee"), 1000);
         }
 
         public void InitiateLoan(ILoanSchedule schedule)
         {
             int loanAmount = this.GetTotalCostOfCatalogs();
-            this.ChangeLoanBalance(loanAmount, "Principal");
+            this.ChangeLoanBalance(loanAmount, L("Principal"));
 
             // Consider changing things up if the loan is initiated after the 21st so it doesn't go around assessing fees.
             // That doesn't matter now since we're hard-coding a loan that has no minimum payment for the first two seasons.
@@ -396,11 +401,11 @@ comforts of tomorrow today!".Replace("\r", "").Replace("\n\n", "||").Replace("\n
         private void SendWelcomeMail()
         {
             this.SendMail(
-                "welcome",
-                "Your Furniture Catalog",
-                @"JojaFinancial is so pleased that you have taken your first steps towards comfortable living and a solid credit rating!  Watch your mail in the coming months for reminders about making your EZ Payments later on this year.
+                I("welcome"),
+                L("Your Furniture Catalog"),
+                L(@"JojaFinancial is so pleased that you have taken your first steps towards comfortable living and a solid credit rating!  Watch your mail in the coming months for reminders about making your EZ Payments later on this year.
 
-                - the JojaFinancial Team",
+ - the JojaFinancial Team"),
                 this.Mod.GetConfiguredCatalogs().Select(i => i.QualifiedItemId).ToArray());
         }
 

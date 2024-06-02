@@ -3,6 +3,8 @@ using System.Linq;
 using StardewModdingAPI;
 using StardewValley;
 
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+
 namespace StardewValleyMods.JojaFinancial
 {
     public class GeneratedMail : ISimpleLog
@@ -45,14 +47,14 @@ namespace StardewValleyMods.JojaFinancial
         {
             string mailKey = $"{idPrefix}.{Game1.Date.Year}.{Game1.Date.SeasonIndex}.{Game1.Date.DayOfMonth}";
             // [letterbg 4] adds the joja letterhead
-            string value = "[letterbg 4]" + message.Replace("\r", "").Replace("\n", "^");
+            string value = I("[letterbg 4]") + message.Replace("\r", "").Replace("\n", "^");
 
             foreach (var pair in attachedItems)
             {
-                value += $"%item id {pair.qiid} {pair.count}%%";
+                value += IF($"%item id {pair.qiid} {pair.count}%%");
             }
             value += "[#]" + synopsis;
-            Game1.player.modData[$"{MailModDataPrefix}.{mailKey}"] = value;
+            Game1.player.modData[IF($"{MailModDataPrefix}.{mailKey}")] = value;
             this.Mod.Helper.GameContent.InvalidateCache("Data/Mail");
             Game1.player.mailForTomorrow.Add(mailKey);
         }

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NermNermNerm.Stardew.LocalizeFromSource;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.GameData.Shops;
 
-// TODO:
-//  Add Debug function to pump out all the mails to validate the text.
-//  i18n
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -41,6 +40,13 @@ namespace StardewValleyMods.JojaFinancial
 
         public override void Entry(IModHelper helper)
         {
+            Initialize(() => helper.Translation.Locale);
+            OnBadTranslation += (message) => this.Monitor.LogOnce(IF($"Translation error: {message}"), LogLevel.Info);
+            OnTranslationFilesCorrupt += (message) => this.Monitor.LogOnce(IF($"Translation error: {message}"), LogLevel.Error);
+#if DEBUG
+            DoPseudoLoc = true;
+#endif
+
             Config = this.Helper.ReadConfig<ModConfig>();
             this.ConfigMenu.Entry(this);
 
@@ -56,7 +62,7 @@ namespace StardewValleyMods.JojaFinancial
         {
             try
             {
-                this.LogInfo("Loan initiated");
+                this.LogInfo($"Loan initiated");
             }
             finally
             {
@@ -71,7 +77,7 @@ namespace StardewValleyMods.JojaFinancial
                 e.Edit((data) =>
                 {
                     var dict = data.AsDictionary<string, string>().Data;
-                    dict[$"{MorrisOffersLoanEvent}/t 600 930/w sunny/d Mon Tue"] = $@"
+                    dict[IF($"{MorrisOffersLoanEvent}/t 600 930/w sunny/d Mon Tue")] = SdvEvent($@"
 continue
 64 15
 farmer 64 15 2 Morris 65 16 0
@@ -94,22 +100,22 @@ speak Morris ""Once again, Welcome to Stardew Valley and we look forward to seei
 pause 200
 faceDirection Morris 1
 end fade
-".Replace("\r", "").Replace("\n", "/");
+").Replace("\r", "").Replace("\n", "/");
                 });
             }
         }
 
-
+        [NoStrict]
         public List<StardewValley.Object> GetConfiguredCatalogs()
         {
             void issueError(string message)
             {
-                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration is bad: {message}");
+                StardewValley.Game1.chatBox?.addErrorMessage(IF($"JojaFinancial's configuration is bad: {message}"));
                 this.LogError($"Bad configuration: {message}");
             }
             void issueWarning(string message)
             {
-                StardewValley.Game1.chatBox?.addErrorMessage($"JojaFinancial's configuration is suspicious: {message}");
+                StardewValley.Game1.chatBox?.addErrorMessage(IF($"JojaFinancial's configuration is suspicious: {message}"));
                 this.LogWarning($"Suspicious configuration: {message}");
             }
 

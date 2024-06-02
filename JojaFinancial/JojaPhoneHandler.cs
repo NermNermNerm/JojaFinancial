@@ -6,10 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
-using StardewValley.GameData.Objects;
-using StardewValley.ItemTypeDefinitions;
-using StardewValley.Menus;
 using StardewValley.Objects;
+
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
 
 namespace StardewValleyMods.JojaFinancial
 {
@@ -36,7 +35,7 @@ namespace StardewValleyMods.JojaFinancial
 
         public IEnumerable<KeyValuePair<string, string>> GetOutgoingNumbers()
         {
-            yield return new KeyValuePair<string, string>(JojaFinancialOutgoingPhone, "Joja Finance");
+            yield return new KeyValuePair<string, string>(JojaFinancialOutgoingPhone, L("Joja Finance"));
         }
 
         public bool TryHandleIncomingCall(string callId, out Action? showDialogue)
@@ -57,11 +56,11 @@ namespace StardewValleyMods.JojaFinancial
                 Game1.playSound("bigSelect");
                 if (this.ShouldGivePlayerTheRunAround)
                 {
-                    this.PhoneDialog("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!#$b#This call may be monitored for training and quality purposes.", () => this.RigmaroleMenu());
+                    this.PhoneDialog(L("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!#$b#This call may be monitored for training and quality purposes."), () => this.RigmaroleMenu());
                 }
                 else
                 {
-                    this.PhoneDialog("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!", () => this.MainMenu("How can we help you today?"));
+                    this.PhoneDialog(L("Welcome to JojaFinancial's Super-Helpful(tm) automated phone system!"), () => this.MainMenu(L("How can we help you today?")));
                 }
             }, 4950);
 
@@ -74,20 +73,20 @@ namespace StardewValleyMods.JojaFinancial
         public record PhoneMenuItem(string Response, Action Action);
 
         private static string[] Names = [
-            "Elvis Aaron Presley",
-            "King Leopold II",
-            "George Foreman",
-            "Judith Sheindlin",
-            "Nipsy Russell",
-            "Janet Reno",
-            "The Right Honourable Viscount Nelson",
-            "Wilma Flintstone",
-            "James T. Kirk",
-            "Tina Turner",
-            "Beverly Crusher",
-            "Patsy Stone",
-            "Bruce Lee",
-            "Detective Lennie Briscoe"
+            L("Elvis Aaron Presley"),
+            L("King Leopold II"),
+            L("George Foreman"),
+            L("Judith Sheindlin"),
+            L("Nipsy Russell"),
+            L("Janet Reno"),
+            L("The Right Honourable Viscount Nelson"),
+            L("Wilma Flintstone"),
+            L("James T. Kirk"),
+            L("Tina Turner"),
+            L("Beverly Crusher"),
+            L("Patsy Stone"),
+            L("Bruce Lee"),
+            L("Detective Lennie Briscoe")
         ];
 
         public void RigmaroleMenu()
@@ -95,10 +94,10 @@ namespace StardewValleyMods.JojaFinancial
             var actions = Names
                 .OrderBy(x => Game1.random.Next())
                 .Take(3)
-                .Append($"Farmer {this.Mod.Game1.PlayerName}")
+                .Append(LF($"Farmer {this.Mod.Game1.PlayerName}"))
                 .Select(x => new PhoneMenuItem(x, () => this.HaveIGotADealForYou(x)))
                 .ToArray();
-            this.PhoneDialog("In order to server you better, please give us your name:", actions);
+            this.PhoneDialog(L("In order to server you better, please give us your name:"), actions);
         }
 
         private static readonly string[] RandomSaleItems = [
@@ -138,13 +137,10 @@ namespace StardewValleyMods.JojaFinancial
             } while (thingToSell is null || thingToSell.Price <= 0);
             int salesPrice = (int)(thingToSell.Stack * thingToSell.Price * 2.11); // randomize the number a bit
             string message =
-                "Hey, just a quick second here to let you know that our buyers scour the earth for great deals that "
-                + $"we can share with you. {chosenName}, our AI-backed sales team has picked a special deal, just for you. "
-                + $"We are prepared to offer you {thingToSell.Stack} {thingToSell.Name} at the extra special, discounted "
-                + $"price of {salesPrice}g.";
+                LF($@"Hey, just a quick second here to let you know that our buyers scour the earth for great deals that we can share with you. {chosenName}, our AI-backed sales team has picked a special deal, just for you. We are prepared to offer you {thingToSell.Stack} {thingToSell.Name} at the extra special, discounted price of {salesPrice}g.");
             this.PhoneDialog(message, [
-                new PhoneMenuItem("I'll take it!", () => this.HandleOneBornEveryMinute(chosenName, thingToSell, salesPrice)),
-                new PhoneMenuItem("No thanks.", () => this.HandleHardSell(chosenName, thingToSell, salesPrice)),
+                new PhoneMenuItem(L("I'll take it!"), () => this.HandleOneBornEveryMinute(chosenName, thingToSell, salesPrice)),
+                new PhoneMenuItem(L("No thanks."), () => this.HandleHardSell(chosenName, thingToSell, salesPrice)),
             ]);
         }
 
@@ -153,14 +149,14 @@ namespace StardewValleyMods.JojaFinancial
             if (this.Mod.Game1.PlayerMoney >= salesPrice)
             {
                 this.Mod.Game1.PlayerMoney -= salesPrice;
-                this.Mod.GeneratedMail.SendMail("jojaSale", $"Your {item.Name} from JojaFinancial",
-                    "Here's your special purchase from JojaFinancial's Super-Helpful Automated Phone System!  We're so glad our AI predicted your needs so well!",
+                this.Mod.GeneratedMail.SendMail("jojaSale", LF($"Your {item.Name} from JojaFinancial"),
+                    L("Here's your special purchase from JojaFinancial's Super-Helpful Automated Phone System!  We're so glad our AI predicted your needs so well!"),
                     (item.QualifiedItemId, item.Stack));
-                this.MainMenu($"Processing...#$b#{chosenName}, your {item.Name} is on its way!  JojaCorp appreciates your business!#$b#Is there anything else I can help you with?");
+                this.MainMenu(LF($"Processing...#$b#{chosenName}, your {item.Name} is on its way!  JojaCorp appreciates your business!#$b#Is there anything else I can help you with?"));
             }
             else
             {
-                this.MainMenu($"Processing...#$b#{chosenName}, I'm sorry to tell you that your bank declined the transaction citing insufficient funds!  Please come back when your credit situation improves!#$b#Is there anything else I can help you with?");
+                this.MainMenu(LF($"Processing...#$b#{chosenName}, I'm sorry to tell you that your bank declined the transaction citing insufficient funds!  Please come back when your credit situation improves!#$b#Is there anything else I can help you with?"));
             }
         }
 
@@ -169,9 +165,9 @@ namespace StardewValleyMods.JojaFinancial
             // Maybe randomize the messages?
             //   "Are you sure?  Next-day shipping is included at no extra charge!"
             this.PhoneDialog(
-                "Are you sure?  You know that buying stuff you don't need at inflated prices is a great way to boost your credit score!",
-                new PhoneMenuItem("Well, okay, if it'll boost my credit score...", () => this.HandleOneBornEveryMinute(chosenName, item, salesPrice)),
-                new PhoneMenuItem("Yes, quit asking!", () => this.MainMenu("Okay, but if you change your mind, call us back!  Now, how else can we help you today?")));
+                L("Are you sure?  You know that buying stuff you don't need at inflated prices is a great way to boost your credit score!"),
+                new PhoneMenuItem(L("Well, okay, if it'll boost my credit score..."), () => this.HandleOneBornEveryMinute(chosenName, item, salesPrice)),
+                new PhoneMenuItem(L("Yes, quit asking!"), () => this.MainMenu(L("Okay, but if you change your mind, call us back!  Now, how else can we help you today?"))));
         }
 
         public void MainMenu(string message)
@@ -179,24 +175,24 @@ namespace StardewValleyMods.JojaFinancial
             if (this.Mod.Loan.IsLoanUnderway)
             {
                 this.PhoneDialog(message, [
-                    new PhoneMenuItem("Get your balance and minimum payment amount", this.HandleGetBalance),
-                    new PhoneMenuItem("Make a payment", this.HandleMakePayment),
+                    new PhoneMenuItem(L("Get your balance and minimum payment amount"), this.HandleGetBalance),
+                    new PhoneMenuItem(L("Make a payment"), this.HandleMakePayment),
                     this.Mod.Loan.IsOnAutoPay
-                        ? new PhoneMenuItem("Turn off autopay", this.HandleAutoPay)
-                        : new PhoneMenuItem("Set up autopay", this.HandleAutoPay),
+                        ? new PhoneMenuItem(L("Turn off autopay"), this.HandleAutoPay)
+                        : new PhoneMenuItem(L("Set up autopay"), this.HandleAutoPay),
                 ]);
             }
             else if (this.Mod.Loan.IsPaidOff)
             {
-                this.PhoneDialog("I'm sorry, but we have no more loan opportunities to offer you at this time.  But keep calling back for our special offers!", () => { });
+                this.PhoneDialog(L("I'm sorry, but we have no more loan opportunities to offer you at this time.  But keep calling back for our special offers!"), () => { });
             }
             else
             {
                 this.PhoneDialog(message, [
-                    new PhoneMenuItem("Get the 2-year loan terms", () => this.HandleGetLoanTerms(new LoanScheduleTwoYear())),
-                    new PhoneMenuItem("Get the 3-year loan terms", () => this.HandleGetLoanTerms(new LoanScheduleThreeYear())),
-                    new PhoneMenuItem("Start a 2-year loan", () => this.HandleStartTheLoan(new LoanScheduleTwoYear())),
-                    new PhoneMenuItem("Start a 3-year loan", () => this.HandleStartTheLoan(new LoanScheduleThreeYear())),
+                    new PhoneMenuItem(L("Get the 2-year loan terms"), () => this.HandleGetLoanTerms(new LoanScheduleTwoYear())),
+                    new PhoneMenuItem(L("Get the 3-year loan terms"), () => this.HandleGetLoanTerms(new LoanScheduleThreeYear())),
+                    new PhoneMenuItem(L("Start a 2-year loan"), () => this.HandleStartTheLoan(new LoanScheduleTwoYear())),
+                    new PhoneMenuItem(L("Start a 3-year loan"), () => this.HandleStartTheLoan(new LoanScheduleThreeYear())),
                 ]);
             }
         }
@@ -213,11 +209,11 @@ namespace StardewValleyMods.JojaFinancial
         {
             // The PhoneDialog without the menu uses the 'Dialogue' class, which supports multipart messages, while
             //  this one does not.  So we'll do some shenanigans to give it consistent behavior.  Maybe.
-            int multipartIndex = message.LastIndexOf("#$b#");
+            int multipartIndex = message.LastIndexOf(I("#$b#"));
             if (multipartIndex > 0)
             {
                 string introPart = message.Substring(0, multipartIndex);
-                string menuPart = message.Substring(multipartIndex + "#$b#".Length);
+                string menuPart = message.Substring(multipartIndex + I("#$b#").Length);
                 this.PhoneDialog(introPart, () => this.PhoneDialog(menuPart, menuItems));
             }
             else
@@ -235,45 +231,45 @@ namespace StardewValleyMods.JojaFinancial
         private void HandleGetLoanTerms(ILoanSchedule schedule)
         {
             this.Mod.Loan.SendMailLoanTerms(schedule);
-            this.PhoneDialog($"Great!  I just mailed to you the loan terms, you should have them tomorrow morning!  Call us back before the end of the month to lock in these low rates!",
-                () => this.MainMenu("Is there anything else we can do for you?"));
+            this.PhoneDialog(L("Great!  I just mailed to you the loan terms, you should have them tomorrow morning!  Call us back before the end of the month to lock in these low rates!"),
+                () => this.MainMenu(L("Is there anything else we can do for you?")));
         }
 
         private void HandleStartTheLoan(ILoanSchedule schedule)
         {
             this.Mod.Loan.InitiateLoan(schedule);
-            this.PhoneDialog($"Great!  I just mailed to you the catalogs and started your loan!  Remember to make your payments by the {Loan.PaymentDueDayString} of every month or you can set up auto-pay !",
-                () => this.MainMenu("Is there anything else we can do for you?"));
+            this.PhoneDialog(LF($"Great!  I just mailed to you the catalogs and started your loan!  Remember to make your payments by the 21st of every month or you can set up auto-pay !"),
+                () => this.MainMenu(L("Is there anything else we can do for you?")));
         }
 
         public void HandleGetBalance()
         {
-            this.PhoneDialog($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment is {this.Mod.Loan.MinimumPayment}g and is due on the {Loan.PaymentDueDayString}.",
-                () => this.MainMenu("Is there anything else we can do for you?"));
+            this.PhoneDialog(LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment is {this.Mod.Loan.MinimumPayment}g and is due on the 21st."),
+                () => this.MainMenu(L("Is there anything else we can do for you?")));
         }
 
         public void HandleMakePayment()
         {
-            this.PhoneDialog("How much would you like to pay?",
-                new PhoneMenuItem($"The minimum ({this.Mod.Loan.MinimumPayment}g)", () => this.HandleMakePayment(this.Mod.Loan.MinimumPayment)),
-                new PhoneMenuItem($"The full remaining balance ({this.Mod.Loan.RemainingBalance}g)", () => this.HandleMakePayment(this.Mod.Loan.RemainingBalance)));
+            this.PhoneDialog(L("How much would you like to pay?"),
+                new PhoneMenuItem(LF($"The minimum ({this.Mod.Loan.MinimumPayment}g)"), () => this.HandleMakePayment(this.Mod.Loan.MinimumPayment)),
+                new PhoneMenuItem(LF($"The full remaining balance ({this.Mod.Loan.RemainingBalance}g)"), () => this.HandleMakePayment(this.Mod.Loan.RemainingBalance)));
         }
 
         public void HandleMakePayment(int amount)
         {
             if (amount == 0)
             {
-                this.MainMenu("There's no need to pay at this point - you owe nothing right now.");
+                this.MainMenu(L("There's no need to pay at this point - you owe nothing right now."));
             }
             else
             {
-                this.PhoneDialog("Processing...", () =>
+                this.PhoneDialog(L("Processing..."), () =>
                 {
                     string message = this.Mod.Loan.TryMakePayment(amount)
                         ? (this.Mod.Loan.IsPaidOff
-                            ? "Thank you!  Your loan is fully repaid!  You and JojaCorp thrive together!  Is there anything else we can do for you today?"
-                            : "Thank you for making your payment!  Is there anything else we can do for you today?")
-                        : "I'm sorry, but your bank declined the request citing insufficient funds.  Is there anything else we can do for you today?";
+                            ? L("Thank you!  Your loan is fully repaid!  You and JojaCorp thrive together!  Is there anything else we can do for you today?")
+                            : L("Thank you for making your payment!  Is there anything else we can do for you today?"))
+                        : L("I'm sorry, but your bank declined the request citing insufficient funds.  Is there anything else we can do for you today?");
                     this.MainMenu(message);
                 });
             }
@@ -283,9 +279,9 @@ namespace StardewValleyMods.JojaFinancial
         {
             this.Mod.Loan.IsOnAutoPay = !this.Mod.Loan.IsOnAutoPay;
             string message = this.Mod.Loan.IsOnAutoPay
-                ? $"Thank you for taking advantage of AutoPay - remember to have sufficient funds in your account by day {Loan.AutoPayDayOfSeason} of each season to cover the minimum payment."
-                : $"Auto-Pay has been turned off for your account.  Remember to call the Super-Helpful(tm) automated phone system by day {Loan.PaymentDueDayOfSeason} of each season to make your seasonal payment.";
-            message += " Is there anything else I can help you with?";
+                ? LF($"Thank you for taking advantage of AutoPay - remember to have sufficient funds in your account by day {Loan.AutoPayDayOfSeason} of each season to cover the minimum payment.")
+                : LF($"Auto-Pay has been turned off for your account.  Remember to call the Super-Helpful(tm) automated phone system by day {Loan.PaymentDueDayOfSeason} of each season to make your seasonal payment.");
+            message += L(" Is there anything else I can help you with?");
             this.MainMenu(message);
         }
 
