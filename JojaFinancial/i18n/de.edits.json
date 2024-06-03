@@ -1,0 +1,773 @@
+// Translators - only edit 'newTarget' values.  The build for this project will apply your changes to the language.json file
+{
+  "000003": {
+    "oldSource": null,
+    "newSource": "Hey, just a quick second here to let you know that our buyers scour the earth for great deals that we can share with you. {{arg0}}, our AI-backed sales team has picked a special deal, just for you. We are prepared to offer you {{arg1}} {{arg2}} at the extra special, discounted price of {{arg3}}g.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L139"
+  },
+  "000006": {
+    "oldSource": null,
+    "newSource": "Your {{arg0}} from JojaFinancial",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L152"
+  },
+  "000007": {
+    "oldSource": null,
+    "newSource": "Here\u0027s your special purchase from JojaFinancial\u0027s Super-Helpful Automated Phone System!  We\u0027re so glad our AI predicted your needs so well!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L152"
+  },
+  "000008": {
+    "oldSource": null,
+    "newSource": "Processing...#$b#{{arg0}}, your {{arg1}} is on its way!  JojaCorp appreciates your business!#$b#Is there anything else I can help you with?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L155"
+  },
+  "000009": {
+    "oldSource": null,
+    "newSource": "Processing...#$b#{{arg0}}, I\u0027m sorry to tell you that your bank declined the transaction citing insufficient funds!  Please come back when your credit situation improves!#$b#Is there anything else I can help you with?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L159"
+  },
+  "00000a": {
+    "oldSource": null,
+    "newSource": "Are you sure?  You know that buying stuff you don\u0027t need at inflated prices is a great way to boost your credit score!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L167"
+  },
+  "00000b": {
+    "oldSource": null,
+    "newSource": "Well, okay, if it\u0027ll boost my credit score...",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L167"
+  },
+  "00000c": {
+    "oldSource": null,
+    "newSource": "Yes, quit asking!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L167"
+  },
+  "00000d": {
+    "oldSource": null,
+    "newSource": "Get your balance and minimum payment amount",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L177"
+  },
+  "00000e": {
+    "oldSource": null,
+    "newSource": "Make a payment",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L177"
+  },
+  "00000f": {
+    "oldSource": null,
+    "newSource": "Set up autopay",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L177"
+  },
+  "000010": {
+    "oldSource": null,
+    "newSource": "Turn off autopay",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L177"
+  },
+  "000011": {
+    "oldSource": null,
+    "newSource": "I\u0027m sorry, but we have no more loan opportunities to offer you at this time.  But keep calling back for our special offers!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L187"
+  },
+  "000012": {
+    "oldSource": null,
+    "newSource": "Get the 2-year loan terms",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L191"
+  },
+  "000013": {
+    "oldSource": null,
+    "newSource": "Get the 3-year loan terms",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L191"
+  },
+  "000014": {
+    "oldSource": null,
+    "newSource": "Start a 2-year loan",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L191"
+  },
+  "000015": {
+    "oldSource": null,
+    "newSource": "Start a 3-year loan",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L191"
+  },
+  "000016": {
+    "oldSource": null,
+    "newSource": "Great!  I just mailed to you the loan terms, you should have them tomorrow morning!  Call us back before the end of the month to lock in these low rates!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L234"
+  },
+  "000017": {
+    "oldSource": null,
+    "newSource": "Great!  I just mailed to you the catalogs and started your loan!  Remember to make your payments by the 21st of every month or you can set up auto-pay !",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L241"
+  },
+  "000018": {
+    "oldSource": null,
+    "newSource": "Your current balance is {{arg0}}g.  Your minimum payment is {{arg1}}g and is due on the 21st.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L247"
+  },
+  "000019": {
+    "oldSource": null,
+    "newSource": "How much would you like to pay?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L253"
+  },
+  "00001a": {
+    "oldSource": null,
+    "newSource": "The minimum ({{arg0}}g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L253"
+  },
+  "00001b": {
+    "oldSource": null,
+    "newSource": "The full remaining balance ({{arg0}}g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L253"
+  },
+  "00001c": {
+    "oldSource": null,
+    "newSource": "There\u0027s no need to pay at this point - you owe nothing right now.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L262"
+  },
+  "00001d": {
+    "oldSource": null,
+    "newSource": "Processing...",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L266"
+  },
+  "00001e": {
+    "oldSource": null,
+    "newSource": "Auto-Pay has been turned off for your account.  Remember to call the Super-Helpful(tm) automated phone system by day {{arg0}} of each season to make your seasonal payment.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L281"
+  },
+  "00001f": {
+    "oldSource": null,
+    "newSource": "Thank you for taking advantage of AutoPay - remember to have sufficient funds in your account by day {{arg0}} of each season to cover the minimum payment.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L281"
+  },
+  "000020": {
+    "oldSource": null,
+    "newSource": " Is there anything else I can help you with?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L284"
+  },
+  "000021": {
+    "oldSource": null,
+    "newSource": "Elvis Aaron Presley",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000022": {
+    "oldSource": null,
+    "newSource": "King Leopold II",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000023": {
+    "oldSource": null,
+    "newSource": "George Foreman",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000024": {
+    "oldSource": null,
+    "newSource": "Judith Sheindlin",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000025": {
+    "oldSource": null,
+    "newSource": "Nipsy Russell",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000026": {
+    "oldSource": null,
+    "newSource": "Janet Reno",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000027": {
+    "oldSource": null,
+    "newSource": "The Right Honourable Viscount Nelson",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000028": {
+    "oldSource": null,
+    "newSource": "Wilma Flintstone",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "000029": {
+    "oldSource": null,
+    "newSource": "James T. Kirk",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002a": {
+    "oldSource": null,
+    "newSource": "Tina Turner",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002b": {
+    "oldSource": null,
+    "newSource": "Beverly Crusher",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002c": {
+    "oldSource": null,
+    "newSource": "Patsy Stone",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002d": {
+    "oldSource": null,
+    "newSource": "Bruce Lee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002e": {
+    "oldSource": null,
+    "newSource": "Detective Lennie Briscoe",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L75"
+  },
+  "00002f": {
+    "oldSource": null,
+    "newSource": "Welcome to JojaFinancial\u0027s Super-Helpful(tm) automated phone system!#$b#This call may be monitored for training and quality purposes.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L59"
+  },
+  "000030": {
+    "oldSource": null,
+    "newSource": "Welcome to JojaFinancial\u0027s Super-Helpful(tm) automated phone system!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L63"
+  },
+  "000031": {
+    "oldSource": null,
+    "newSource": "How can we help you today?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L63"
+  },
+  "000032": {
+    "oldSource": null,
+    "newSource": "Is there anything else we can do for you?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L248"
+  },
+  "000033": {
+    "oldSource": null,
+    "newSource": "Okay, but if you change your mind, call us back!  Now, how else can we help you today?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L170"
+  },
+  "000034": {
+    "oldSource": null,
+    "newSource": "I\u0027m sorry, but your bank declined the request citing insufficient funds.  Is there anything else we can do for you today?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L268"
+  },
+  "000035": {
+    "oldSource": null,
+    "newSource": "Thank you for making your payment!  Is there anything else we can do for you today?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L268"
+  },
+  "000036": {
+    "oldSource": null,
+    "newSource": "Thank you!  Your loan is fully repaid!  You and JojaCorp thrive together!  Is there anything else we can do for you today?",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L268"
+  },
+  "000037": {
+    "oldSource": null,
+    "newSource": "Joja Finance",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L38"
+  },
+  "000038": {
+    "oldSource": null,
+    "newSource": "Interest",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L122"
+  },
+  "000039": {
+    "oldSource": null,
+    "newSource": "Payment",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L157"
+  },
+  "00003a": {
+    "oldSource": null,
+    "newSource": "Late Fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L183"
+  },
+  "00006f": {
+    "oldSource": null,
+    "newSource": "Here is your complimentary JojaFinancial Furniture loan statement for {{arg0}}.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L247"
+  },
+  "00003c": {
+    "oldSource": null,
+    "newSource": "Your minimum payment, due before the 21st of this season is: {{arg0}}g.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L251"
+  },
+  "00003d": {
+    "oldSource": null,
+    "newSource": "  This amount will be automatically deducted on the {{arg0}}.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L254"
+  },
+  "00003e": {
+    "oldSource": null,
+    "newSource": "No payment is necessary this season.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L260"
+  },
+  "00003f": {
+    "oldSource": null,
+    "newSource": "Loan Balance: {{arg0}}",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L263"
+  },
+  "000040": {
+    "oldSource": null,
+    "newSource": "Activity:",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L278"
+  },
+  "00003b": {
+    "oldSource": null,
+    "newSource": "{{arg0}} statement",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L282"
+  },
+  "000042": {
+    "oldSource": null,
+    "newSource": "Your JojaFinancial Furniture Loan is paid in full!  We know you have choices, and we\u0027re super-happy that you chose us.  Almost as happy as we are to have all that money!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L276"
+  },
+  "000043": {
+    "oldSource": null,
+    "newSource": "Autopay Succeeded",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L288"
+  },
+  "000044": {
+    "oldSource": null,
+    "newSource": "Thank you for participating in JojaFinancial\u0027s AutoPay system!\r\nYour payment of {{arg0}} was processed on the 16th.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L288"
+  },
+  "000045": {
+    "oldSource": null,
+    "newSource": "Auto-pay Failed!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L294"
+  },
+  "000046": {
+    "oldSource": null,
+    "newSource": "ALERT!  Your JojaFinancial Loan Automatic Payment of {{arg0}}g did not go through!\r\nIn order to avoid a penalty fee and possible interest rate increases, pay this amount by calling JojaFinancial\u0027s Super-Helpful Phone Assistant(tm) on or before the 21st of this month.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L294"
+  },
+  "000047": {
+    "oldSource": null,
+    "newSource": "Missed Payment!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L300"
+  },
+  "000048": {
+    "oldSource": null,
+    "newSource": "CREDIT DISASTER IMPENDING!  You missed your payment for this season, and a fee of {{arg0}}g has been imposed and added to your outstanding balance.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L300"
+  },
+  "000070": {
+    "oldSource": null,
+    "newSource": "Spring",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L307"
+  },
+  "000071": {
+    "oldSource": null,
+    "newSource": "Summer",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L307"
+  },
+  "000072": {
+    "oldSource": null,
+    "newSource": "Fall",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L307"
+  },
+  "000073": {
+    "oldSource": null,
+    "newSource": "Winter",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L307"
+  },
+  "000056": {
+    "oldSource": null,
+    "newSource": "{{arg0}} of year {{arg1}}",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L309"
+  },
+  "000049": {
+    "oldSource": null,
+    "newSource": "The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!\r\nCall the Joja Super-Helpful Phone Assistant today to get your life of comfort in the mail tomorrow with no up-front fees,\r\nno down-payment, no payments at all for the first two seasons, and no interest for the first season!\r\n\r\nThe JojaFinancial furniture loan features a payment system structured to your rise to financial security.\r\nSure, if your rosy view of the future doesn\u0027t end up coming to pass, it\u0027ll load you up with soul-crushing debt.\r\nBut that\u0027s your fault for going into a field where you\u0027re actually trying to make something of value instead\r\nof finance where you sell dreams!  Our loan comes with a low 2%/season interest rate and while there are\r\nsome fees we have to charge in order to bring this wonderful opportunity to you, they\u0027re rolled into the loan\r\nto allow us to give you two seasons with ZERO PAYMENTS!\r\n\r\nThere\u0027s a whole bunch of fine print below that you should definitely read.  If you do, please tell us and\r\nwe\u0027ll work harder in the future to make it even longer and finer so you won\u0027t next time.  What you really\r\nwant to do now is call up the Super-Helpful Phone Assistant and kick off this loan to bring yourself the\r\ncomforts of tomorrow today!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L317"
+  },
+  "00004a": {
+    "oldSource": null,
+    "newSource": " Loan Amount: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L336"
+  },
+  "00004b": {
+    "oldSource": null,
+    "newSource": " Fees",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L337"
+  },
+  "00004c": {
+    "oldSource": null,
+    "newSource": "  {{arg0}}g {{arg1}}",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L342"
+  },
+  "00004d": {
+    "oldSource": null,
+    "newSource": " Opening Balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L346"
+  },
+  "00004e": {
+    "oldSource": null,
+    "newSource": " Payment: -{{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L359"
+  },
+  "00004f": {
+    "oldSource": null,
+    "newSource": " Interest: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L365"
+  },
+  "000050": {
+    "oldSource": null,
+    "newSource": " Remaining balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L367"
+  },
+  "000051": {
+    "oldSource": null,
+    "newSource": "Total cost of loan (fees and interest): {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L372"
+  },
+  "000052": {
+    "oldSource": null,
+    "newSource": "Furniture loan terms",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L374"
+  },
+  "000053": {
+    "oldSource": null,
+    "newSource": "Principal",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L389"
+  },
+  "000054": {
+    "oldSource": null,
+    "newSource": "Your Furniture Catalog",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L403"
+  },
+  "000055": {
+    "oldSource": null,
+    "newSource": "JojaFinancial is so pleased that you have taken your first steps towards comfortable living and a solid credit rating!  Watch your mail in the coming months for reminders about making your EZ Payments later on this year.\r\n\r\n - the JojaFinancial Team",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L403"
+  },
+  "000057": {
+    "oldSource": null,
+    "newSource": "Loan origination fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L379"
+  },
+  "000058": {
+    "oldSource": null,
+    "newSource": "SuperHelpful phone service fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L380"
+  },
+  "000059": {
+    "oldSource": null,
+    "newSource": "Personal visit fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L381"
+  },
+  "00005a": {
+    "oldSource": null,
+    "newSource": "Statement preparation fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L382"
+  },
+  "00005b": {
+    "oldSource": null,
+    "newSource": "Complimentary phone fee",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L383"
+  },
+  "00005c": {
+    "oldSource": null,
+    "newSource": "Base game furniture",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L38"
+  },
+  "00005d": {
+    "oldSource": null,
+    "newSource": "The catalog Robin sells (200000g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L41"
+  },
+  "00005e": {
+    "oldSource": null,
+    "newSource": "Base game wallpaper and floor",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L45"
+  },
+  "00005f": {
+    "oldSource": null,
+    "newSource": "The catalog Pierre sells (20000g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L48"
+  },
+  "000060": {
+    "oldSource": null,
+    "newSource": "Joja",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L52"
+  },
+  "000061": {
+    "oldSource": null,
+    "newSource": "The Joja Furniture catalog (25000g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L55"
+  },
+  "000062": {
+    "oldSource": null,
+    "newSource": "Wizard",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L59"
+  },
+  "000063": {
+    "oldSource": null,
+    "newSource": "The Wizard furniture catalog sold by Krobus (150000g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L62"
+  },
+  "000064": {
+    "oldSource": null,
+    "newSource": "Retro",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L66"
+  },
+  "000065": {
+    "oldSource": null,
+    "newSource": "Retro furniture sold by the traveling cart (110000g)",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L69"
+  },
+  "000066": {
+    "oldSource": null,
+    "newSource": "Mod Catalog Qualified Item Id",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L140"
+  },
+  "000067": {
+    "oldSource": null,
+    "newSource": "An \u0027ItemId\u0027 of a furniture catalog supplied by a mod",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModConfigMenu.cs#L147"
+  },
+  "000068": {
+    "oldSource": null,
+    "newSource": "Welcome to the Valley!  It is my pleasure to welcome you to our community on behalf of the whole Joja Team!#$b#Please accept this telephone as a housewarming gift from your friends at your local Jojamart!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "000069": {
+    "oldSource": null,
+    "newSource": "While I\u0027m here, I thought I\u0027d tell you about a SPECIAL OFFER, EXCLUSIVELY for new residents of Stardew Valley!#$b#We\u0027d you to have a complete Wallpaper and Furniture Catalog for ABSOLUTELY NO MONEY DOWN and NO PAYMENTS for TWO SEASONS!$1",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "00006a": {
+    "oldSource": null,
+    "newSource": "...mumble mumble...  usurious interests rates...  mumble mumble...  unfair fees... mumble mumble... draconian penalties...  mumble mumble...$3",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "00006b": {
+    "oldSource": null,
+    "newSource": "SO ARE YOU READY TO START LIVING IN COMFORT??!  Sure you are!  Just sign this contract and I\u0027ll have that furniture catalog shipped right out!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "00006c": {
+    "oldSource": null,
+    "newSource": "Great!  The Joja corporation is ready to enable you to live the way you want to, NOW!  Let the future take care of itself, am I right??!  I\u0027ll have those catalogs shipped out tonight!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "00006d": {
+    "oldSource": null,
+    "newSource": "That\u0027s very... responsible of you - financial decisions like this should be undertaken with careful thought.$3#$b#JojaFinancial is ready whenever you are!  Just use your complimentary Joja Phone to call our offices after you\u0027ve thought it over!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  },
+  "00006e": {
+    "oldSource": null,
+    "newSource": "Once again, Welcome to Stardew Valley and we look forward to seeing you at your local neighborhood JojaMart!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/ModEntry.cs#L80"
+  }
+}
