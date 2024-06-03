@@ -7,27 +7,26 @@ namespace StardewValleyMods.JojaFinancial.Tests
     [TestClass]
     public class LoanTests
     {
-        private ModEntry mod = new ModEntry();
+        private ModEntry mod;
         private StubLoan stubLoan = new();
         private StubJojaPhoneHandler stubPhoneHandler = new();
         private StubModHelper stubHelper = new();
         private StubGame1 stubGame1;
-        private StubGeneratedMail stubGeneratedMail = new StubGeneratedMail();
+        private StubGeneratedMail stubGeneratedMail = new();
+        private StubMonitor stubMonitor = new();
 
         public LoanTests()
         {
-            this.stubGame1 = new StubGame1(this.stubHelper);
             this.stubLoan = new();
             this.stubPhoneHandler = new();
+            this.stubGame1 = new StubGame1(this.stubHelper);
             this.mod = new ModEntry(this.stubGame1, this.stubLoan, this.stubPhoneHandler, this.stubGeneratedMail);
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            var helperProp = typeof(Mod).GetProperty("Helper", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            helperProp!.SetValue(this.mod, this.stubHelper);
-            this.mod.Entry(this.stubHelper);
+            StubMonitor.PrepMod(this.mod, this.stubMonitor, this.stubHelper);
         }
 
         [TestMethod]

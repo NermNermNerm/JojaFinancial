@@ -68,7 +68,7 @@ namespace StardewValleyMods.JojaFinancial
         }
 
         // Consider making this configurable
-        public bool ShouldGivePlayerTheRunAround => true;
+        public bool ShouldGivePlayerTheRunAround => this.Mod.Loan.IsLoanUnderway;
 
         public record PhoneMenuItem(string Response, Action Action);
 
