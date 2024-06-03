@@ -62,7 +62,7 @@ namespace StardewValleyMods.JojaFinancial
         {
             try
             {
-                this.LogInfo($"Loan initiated");
+                this.Loan.InitiateLoan(new LoanScheduleTwoYear());
             }
             finally
             {
