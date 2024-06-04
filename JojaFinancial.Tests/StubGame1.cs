@@ -84,12 +84,17 @@ namespace JojaFinancial.Tests
         public const int RandoSalePrice = 57;
 
         public override StardewValley.Object CreateObject(string itemId, int quantity)
-            => new StardewValley.Object()
+            => new StubObject()
             {
                 ItemId = RandoSaleObjectId,
                 Name = RandoSaleObjectName,
                 Stack = quantity,
-                Price = itemId switch { "(F)1226" => 200000, "(F)1308" => 20000, _ => RandoSalePrice },
+                Price = itemId switch { "(F)1226" => 200000, "(F)1308" => 30000, _ => RandoSalePrice },
             };
+
+        private class StubObject : StardewValley.Object
+        {
+            public override string DisplayName => this.Price switch { 200000 => "Furniture Catalog", 30000 => "Wallpaper Catalog", _ => RandoSaleObjectName };
+        }
     }
 }

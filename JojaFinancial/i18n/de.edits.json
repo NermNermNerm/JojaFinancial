@@ -357,6 +357,27 @@
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L38"
   },
+  "00003f": {
+    "oldSource": null,
+    "newSource": "Loan Balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L263"
+  },
+  "000075": {
+    "oldSource": null,
+    "newSource": "{{arg0}}: {{arg1}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L196"
+  },
+  "000074": {
+    "oldSource": null,
+    "newSource": " Catalogs",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L332"
+  },
   "000038": {
     "oldSource": null,
     "newSource": "Interest",
@@ -405,13 +426,6 @@
     "oldTarget": null,
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L260"
-  },
-  "00003f": {
-    "oldSource": null,
-    "newSource": "Loan Balance: {{arg0}}",
-    "oldTarget": null,
-    "newTarget": null,
-    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L263"
   },
   "000040": {
     "oldSource": null,
@@ -518,13 +532,6 @@
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L317"
   },
-  "00004a": {
-    "oldSource": null,
-    "newSource": " Loan Amount: {{arg0}}g",
-    "oldTarget": null,
-    "newTarget": null,
-    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L336"
-  },
   "00004b": {
     "oldSource": null,
     "newSource": " Fees",
@@ -580,13 +587,6 @@
     "oldTarget": null,
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L374"
-  },
-  "000053": {
-    "oldSource": null,
-    "newSource": "Principal",
-    "oldTarget": null,
-    "newTarget": null,
-    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L389"
   },
   "000054": {
     "oldSource": null,

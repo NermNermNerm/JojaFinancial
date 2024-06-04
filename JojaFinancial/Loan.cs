@@ -193,7 +193,7 @@ namespace StardewValleyMods.JojaFinancial
             // Interest: 123456g
             // Payment: -2345g
             this.SetPlayerModDataValue(LoanBalanceModKey, (this.GetBalance() ?? 0) + amount);
-            this.AddLedgerLine($"{ledgerEntry}: {amount}");
+            this.AddLedgerLine(LF($"{ledgerEntry}: {amount}g"));
         }
 
         private void AddLedgerLine(string s)
@@ -260,7 +260,7 @@ namespace StardewValleyMods.JojaFinancial
                 content.AppendLine(L("No payment is necessary this season."));
             }
             content.AppendLine();
-            content.AppendLine(LF($"Loan Balance: {this.GetBalance() ?? 0}"));
+            content.AppendLine(LF($"Loan Balance: {this.GetBalance() ?? 0}g"));
             content.AppendLine();
             content.AppendLine(L("Activity:"));
             content.AppendLine(ledger);
@@ -300,9 +300,6 @@ In order to avoid a penalty fee and possible interest rate increases, pay this a
             this.SendMail(I("payment"), L("Missed Payment!"), LF($@"CREDIT DISASTER IMPENDING!  You missed your payment for this season, and a fee of {LateFee}g has been imposed and added to your outstanding balance."));
         }
 
-        private int GetTotalCostOfCatalogs()
-            => this.Mod.GetConfiguredCatalogs().Sum(i => i.Price);
-
         private static string Loc(Season season)
             => season switch { Season.Spring => L("Spring"), Season.Summer => L("Summer"), Season.Fall => L("Fall"), _ => L("Winter") };
 
@@ -312,7 +309,6 @@ In order to avoid a penalty fee and possible interest rate increases, pay this a
 
         public void SendMailLoanTerms(ILoanSchedule schedule)
         {
-            int loanAmount = this.GetTotalCostOfCatalogs();
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(
 L(@"The JojaFinancial furniture loan is the ideal way to enjoy the fruits of your inevitable later success right now!
@@ -333,7 +329,13 @@ comforts of tomorrow today!").Replace("\r", "").Replace("\n\n", "||").Replace("\
             messageBuilder.AppendLine();
 
             messageBuilder.AppendLine(this.SeasonAndYear());
-            messageBuilder.AppendLine(LF($" Loan Amount: {loanAmount}g"));
+            messageBuilder.AppendLine(LF($" Catalogs"));
+            int loanAmount = 0;
+            foreach (var catalog in this.Mod.GetConfiguredCatalogs())
+            {
+                messageBuilder.AppendLine(LF($"  {catalog.Price}g {catalog.DisplayName}"));
+                loanAmount += catalog.Price;
+            }
             messageBuilder.AppendLine(L(" Fees"));
             int balance = loanAmount;
             int totalFeesAndInterest = 0;
@@ -385,14 +387,24 @@ comforts of tomorrow today!").Replace("\r", "").Replace("\n\n", "||").Replace("\
 
         public void InitiateLoan(ILoanSchedule schedule)
         {
-            int loanAmount = this.GetTotalCostOfCatalogs();
-            this.ChangeLoanBalance(loanAmount, L("Principal"));
+            int loanAmount = 0;
+            foreach (var catalog in this.Mod.GetConfiguredCatalogs())
+            {
+                this.ChangeLoanBalance(catalog.Price, catalog.DisplayName);
+                loanAmount += catalog.Price;
+            }
+
+            foreach (var fee in this.GetFees(this.Schedule, loanAmount))
+            {
+                this.ChangeLoanBalance(fee.amount, fee.name);
+                loanAmount += fee.amount;
+            }
 
             // Consider changing things up if the loan is initiated after the 21st so it doesn't go around assessing fees.
             // That doesn't matter now since we're hard-coding a loan that has no minimum payment for the first two seasons.
             this.SetPlayerModDataValue(OriginationSeasonModKey, this.SeasonsSinceGameStart);
             this.SetPlayerModDataValue(YearsToPayModKey, schedule is LoanScheduleTwoYear ? 2 : 3);
-            this.SetPlayerModDataValue(LoanBalanceModKey, loanAmount + this.GetFees(this.Schedule, loanAmount).Sum(f => f.amount));
+            this.SetPlayerModDataValue(LoanBalanceModKey, loanAmount);
             this.SetPlayerModDataValue(PaidThisSeasonModKey, null);
             this.SendWelcomeMail();
             this.InvalidateBuildingData();
