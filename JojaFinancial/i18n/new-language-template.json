@@ -445,19 +445,26 @@
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L260"
   },
-  "00003f": {
+  "000076": {
     "oldSource": null,
-    "newSource": "Loan Balance: {{arg0}}g",
+    "newSource": "Details",
     "oldTarget": null,
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L263"
   },
-  "000040": {
+  "00003f": {
     "oldSource": null,
-    "newSource": "Activity:",
+    "newSource": "Current Balance: {{arg0}}g",
     "oldTarget": null,
     "newTarget": null,
-    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L278"
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L266"
+  },
+  "000077": {
+    "oldSource": null,
+    "newSource": "Previous balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L268"
   },
   "00003b": {
     "oldSource": null,
@@ -472,6 +479,13 @@
     "oldTarget": null,
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L276"
+  },
+  "000040": {
+    "oldSource": null,
+    "newSource": "Activity:",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L278"
   },
   "000043": {
     "oldSource": null,

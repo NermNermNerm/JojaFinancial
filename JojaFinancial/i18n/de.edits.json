@@ -357,12 +357,26 @@
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L38"
   },
-  "00003f": {
+  "000076": {
     "oldSource": null,
-    "newSource": "Loan Balance: {{arg0}}g",
+    "newSource": "Details",
     "oldTarget": null,
     "newTarget": null,
     "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L263"
+  },
+  "00003f": {
+    "oldSource": null,
+    "newSource": "Current Balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L266"
+  },
+  "000077": {
+    "oldSource": null,
+    "newSource": "Previous balance: {{arg0}}g",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/Loan.cs#L268"
   },
   "000075": {
     "oldSource": null,

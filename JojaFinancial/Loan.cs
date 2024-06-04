@@ -260,12 +260,12 @@ namespace StardewValleyMods.JojaFinancial
                 content.AppendLine(L("No payment is necessary this season."));
             }
             content.AppendLine();
-            content.AppendLine(LF($"Loan Balance: {this.GetBalance() ?? 0}g"));
-            content.AppendLine();
-            content.AppendLine(L("Activity:"));
+            content.AppendLine(L("Details"));
             content.AppendLine(ledger);
+            content.AppendLine();
+            content.AppendLine(LF($"Current Balance: {this.GetBalance() ?? 0}g"));
 
-            this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, null);
+            this.Mod.Game1.SetPlayerModData(SeasonLedgerModKey, LF($"Previous balance: {this.GetBalance() ?? 0}g"));
             this.SendMail(I("statement"), LF($"{this.SeasonAndYear()} statement"), content.ToString());
         }
 

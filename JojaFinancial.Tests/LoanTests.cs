@@ -131,7 +131,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.stubLoan.EnsureCatalogsHaveBeenDelivered();
             this.stubGeneratedMail.AssertNoMoreMail();
 
-            this.stubPhoneHandler.AssertPaymentAndBalance(0, 230000);
+            this.stubPhoneHandler.AssertPaymentAndBalance(0, 240000);
 
             foreach (var payment in paymentDates)
             {
@@ -162,7 +162,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
         public void AutoPay()
         {
             this.stubLoan.InitiateLoan(new LoanScheduleTwoYear()); // Simulate agreeing with Morris.
-            this.stubPhoneHandler.AssertPaymentAndBalance(0, 230000); // Should work right away.
+            this.stubPhoneHandler.AssertPaymentAndBalance(0, 240000); // Should work right away.
 
             this.stubPhoneHandler.GivenPlayerSetsUpAutopay();
 
