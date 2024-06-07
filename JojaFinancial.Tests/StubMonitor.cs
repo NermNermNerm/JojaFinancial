@@ -69,7 +69,7 @@ namespace JojaFinancial.Tests
             // and do it under a lock to enable multithreaded test-running, if we ever get that far.
             lock (modEntryLock) {
                 var a = Assembly.Load(new AssemblyName("NermNermNerm.Stardew.LocalizeFromSource"))!;
-                var sdvLocalizeMethodsType = a.GetType("NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods")!;
+                var sdvLocalizeMethodsType = a.GetType("NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize")!;
                 var translatorsField = sdvLocalizeMethodsType.GetField("translators", BindingFlags.NonPublic | BindingFlags.Static)!;
                 var translatorsDict = (System.Collections.IDictionary)(translatorsField.GetValue(null)!);
                 List<KeyValuePair<object,object>>? entries = new List<KeyValuePair<object, object>>();
