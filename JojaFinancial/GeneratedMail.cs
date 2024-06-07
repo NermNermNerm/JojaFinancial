@@ -3,7 +3,7 @@ using System.Linq;
 using StardewModdingAPI;
 using StardewValley;
 
-using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize;
 
 namespace StardewValleyMods.JojaFinancial
 {

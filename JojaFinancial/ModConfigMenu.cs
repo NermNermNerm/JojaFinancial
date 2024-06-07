@@ -1,7 +1,7 @@
 using StardewModdingAPI.Events;
 using StardewModdingAPI;
 
-using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize;
 
 namespace StardewValleyMods.JojaFinancial
 {

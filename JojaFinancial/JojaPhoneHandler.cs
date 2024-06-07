@@ -8,7 +8,7 @@ using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.Objects;
 
-using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize;
 
 namespace StardewValleyMods.JojaFinancial
 {

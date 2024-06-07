@@ -7,7 +7,7 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.GameData.Shops;
 
-using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalizeMethods;
+using static NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize;
 
 namespace StardewValleyMods.JojaFinancial
 {
