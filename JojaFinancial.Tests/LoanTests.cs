@@ -70,6 +70,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
             this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.AssertNothingAvailable();
         }
 
 
@@ -114,7 +115,9 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
             this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.AssertNothingAvailable();
         }
+
         [TestMethod]
         public void LateStarts()
         {
@@ -155,6 +158,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
             this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.AssertNothingAvailable();
         }
 
 
@@ -203,22 +207,32 @@ namespace StardewValleyMods.JojaFinancial.Tests
                         this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
                         this.stubPhoneHandler.GivenPlayerSetsUpAutopay();
+                        this.stubPhoneHandler.EnsurePlayerHasNothingMoreToPayThisSeason();
                         break;
                     default:
                         this.stubGame1.PlayerMoney = minimumPaymentPerStatement + 5;
                         this.stubGame1.AdvanceDay(new WorldDate(1 + (seasonCounter / 4), (Season)(seasonCounter % 4), Loan.AutoPayDayOfSeason + 1));
                         this.stubLoan.AssertGotAutoPaySuccessMail();
                         Assert.AreEqual(5, this.stubGame1.PlayerMoney);
+                        if (seasonCounter < 7)
+                        {
+                            // players don't get the option to get minimum balance after it's paid off.
+                            //  Asserts down below check the phone system behaves correctly after payoff.
+                            this.stubPhoneHandler.EnsurePlayerHasNothingMoreToPayThisSeason();
+                        }
                         break;
                 }
             }
 
             this.stubLoan.AssertGotPaidInFullMail();
 
+            this.stubPhoneHandler.AssertNothingAvailable();
+
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
             this.stubGeneratedMail.AssertNoMoreMail();
             Assert.AreEqual(5, this.stubGame1.PlayerMoney);
+            this.stubPhoneHandler.AssertNothingAvailable();
         }
 
 
@@ -258,11 +272,35 @@ namespace StardewValleyMods.JojaFinancial.Tests
                 else if (minimumPaymentPerStatement > 0)
                 {
                     int balanceBeforeMissingPayment = this.stubLoan.RemainingBalance;
-                    this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason + 1));
+                    this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PaymentDueDayOfSeason));
+                    this.stubPhoneHandler.GetPaymentAndBalance(out int minimumPaymentPerPhone, out int balancePerPhone, out bool isOverdue);
+                    Assert.AreEqual(minimumPaymentPerStatement, minimumPaymentPerPhone);
+                    Assert.AreEqual(balanceBeforeMissingPayment, balancePerPhone);
+                    Assert.IsFalse(isOverdue);
+
+                    this.stubGame1.AdvanceDay();
+                    this.stubPhoneHandler.GetPaymentAndBalance(out minimumPaymentPerPhone, out balancePerPhone, out isOverdue);
+                    Assert.IsTrue(minimumPaymentPerStatement < minimumPaymentPerPhone); // Goes up a bit because of late fee
+                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.LateFee, balancePerPhone);
+                    Assert.IsTrue(isOverdue);
+
                     this.stubLoan.AssertGotMissedPaymentMail();
-                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.LateFee, this.stubLoan.RemainingBalance); // Late fee is assessed
+                    this.stubGame1.AdvanceDay();
+
+                    // Make a payment late - ensure it's accepted.
+                    this.stubGame1.PlayerMoney = minimumPaymentPerPhone + 5;
+                    int amountPaid = minimumPaymentPerPhone;
+                    this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
+                    Assert.AreEqual(5, this.stubGame1.PlayerMoney);
+                    this.stubGame1.AdvanceDay();
+                    this.stubPhoneHandler.GetPaymentAndBalance(out minimumPaymentPerPhone, out balancePerPhone, out isOverdue);
+                    Assert.AreEqual(0, minimumPaymentPerPhone);
+                    Assert.AreEqual(balanceBeforeMissingPayment + Loan.LateFee - amountPaid, balancePerPhone);
+                    Assert.IsFalse(isOverdue);
                 }
             }
+
+            this.stubPhoneHandler.AssertNothingAvailable();
 
             // Next day the player should get a closure statement.
             this.stubGame1.AdvanceDay();
@@ -271,6 +309,7 @@ namespace StardewValleyMods.JojaFinancial.Tests
             // Advance a long time and validate that no mail happens.
             this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
             this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.AssertNothingAvailable();
         }
 
         [TestMethod]

@@ -1,5 +1,26 @@
 // Translators - only edit 'newTarget' values.  The build for this project will apply your changes to the language.json file
 {
+  "000078": {
+    "oldSource": null,
+    "newSource": "Your current balance is {{arg0}}g.  No payment is due this season.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L250"
+  },
+  "000079": {
+    "oldSource": null,
+    "newSource": "Your current balance is {{arg0}}g.  Your minimum payment is {{arg1}}g and was due on the 21st.",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L260"
+  },
+  "00007a": {
+    "oldSource": null,
+    "newSource": "Your current balance is {{arg0}}g.  Your minimum payment has been made this season, Thank you!",
+    "oldTarget": null,
+    "newTarget": null,
+    "link": "https://github.com/NermNermNerm/JojaFinancial/blob/main/JojaFinancial/JojaPhoneHandler.cs#L265"
+  },
   "000003": {
     "oldSource": null,
     "newSource": "Hey, just a quick second here to let you know that our buyers scour the earth for great deals that we can share with you. {{arg0}}, our AI-backed sales team has picked a special deal, just for you. We are prepared to offer you {{arg1}} {{arg2}} at the extra special, discounted price of {{arg3}}g.",

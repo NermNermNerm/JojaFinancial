@@ -244,15 +244,40 @@ namespace StardewValleyMods.JojaFinancial
 
         public void HandleGetBalance()
         {
-            this.PhoneDialog(LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment is {this.Mod.Loan.MinimumPayment}g and is due on the 21st."),
-                () => this.MainMenu(L("Is there anything else we can do for you?")));
+            string message;
+            if (this.Mod.Loan.MinimumPayment == 0)
+            {
+                message = LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  No payment is due this season.");
+            }
+            else if (this.Mod.Loan.PaidThisSeason < this.Mod.Loan.MinimumPayment)
+            {
+                if (this.Mod.Game1.Date.DayOfMonth <= 21)
+                {
+                    message = LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment is {this.Mod.Loan.MinimumPayment}g and is due on the 21st.");
+                }
+                else
+                {
+                    message = LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment is {this.Mod.Loan.MinimumPayment}g and was due on the 21st.");
+                }
+            }
+            else
+            {
+                message = LF($"Your current balance is {this.Mod.Loan.RemainingBalance}g.  Your minimum payment has been made this season, Thank you!");
+            }
+
+            this.PhoneDialog(message, () => this.MainMenu(L("Is there anything else we can do for you?")));
         }
 
         public void HandleMakePayment()
         {
-            this.PhoneDialog(L("How much would you like to pay?"),
-                new PhoneMenuItem(LF($"The minimum ({this.Mod.Loan.MinimumPayment}g)"), () => this.HandleMakePayment(this.Mod.Loan.MinimumPayment)),
-                new PhoneMenuItem(LF($"The full remaining balance ({this.Mod.Loan.RemainingBalance}g)"), () => this.HandleMakePayment(this.Mod.Loan.RemainingBalance)));
+            List<PhoneMenuItem> menuItems = new();
+            if (this.Mod.Loan.MinimumPayment == 0 || this.Mod.Loan.MinimumPayment >= this.Mod.Loan.PaidThisSeason)
+            {
+                menuItems.Add(new PhoneMenuItem(LF($"The minimum ({this.Mod.Loan.MinimumPayment}g)"), () => this.HandleMakePayment(this.Mod.Loan.MinimumPayment)));
+            }
+            menuItems.Add(new PhoneMenuItem(LF($"The full remaining balance ({this.Mod.Loan.RemainingBalance}g)"), () => this.HandleMakePayment(this.Mod.Loan.RemainingBalance)));
+
+            this.PhoneDialog(L("How much would you like to pay?"), menuItems.ToArray());
         }
 
         public void HandleMakePayment(int amount)

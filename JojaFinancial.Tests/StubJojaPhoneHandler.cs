@@ -17,7 +17,6 @@ namespace JojaFinancial.Tests
 
         public void GivenPlayerMakesMainMenuChoices(params string[] prompts)
         {
-
             this.Messages.Clear();
             Assert.IsTrue(!this.PromptToTake.Any(), "There are some untaken phone choices left.  Perhaps a bad test or something went wrong earlier?");
             foreach (string prompt in prompts)
@@ -80,10 +79,71 @@ namespace JojaFinancial.Tests
         public void AssertPaymentAndBalance(int payment, int balance)
         {
             this.GivenPlayerMakesMainMenuChoices("balance and minimum payment");
-            var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment is (?<payment>\d+)g", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+            if (payment == 0)
+            {
+                var match = new Regex(@"balance is (?<balance>\d+)g.*No payment is due", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+                Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
+                Assert.AreEqual(balance, int.Parse(match.Groups["balance"].Value));
+            }
+            else
+            {
+                var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment is (?<payment>\d+)g.*(?<isOrWas>is|was) due on the", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+                Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
+                Assert.AreEqual(payment, int.Parse(match.Groups["payment"].Value));
+                Assert.AreEqual(balance, int.Parse(match.Groups["balance"].Value));
+            }
+        }
+
+        /// <summary>
+        ///   After the loan runs its course, the phone system just shuts down.
+        /// </summary>
+        public void AssertNothingAvailable()
+        {
+            this.GivenPlayerMakesMainMenuChoices();
+            Assert.IsTrue(this.Messages[0].Contains("no more loan opportunities"));
+        }
+
+        public void GetPaymentAndBalance(out int payment, out int balance, out bool isOverdue)
+        {
+            this.GivenPlayerMakesMainMenuChoices("balance and minimum payment");
+
+            var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment is (?<payment>\d+)g.*(?<isOrWas>is|was) due on the", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+            if (match.Success)
+            {
+                balance = int.Parse(match.Groups["balance"].Value);
+                payment = int.Parse(match.Groups["payment"].Value);
+                isOverdue = match.Groups["isOrWas"].Value == "was";
+                return;
+            }
+
+            // ... It'd be nice if we could enforce which of these two we got.
+            match = new Regex(@"balance is (?<balance>\d+)g.*No payment is due", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+            if (match.Success)
+            {
+                balance = int.Parse(match.Groups["balance"].Value);
+                payment = 0;
+                isOverdue = false;
+                return;
+            }
+
+            match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment has been made this season", RegexOptions.IgnoreCase).Match(this.Messages[1]);
+            if (match.Success)
+            {
+                balance = int.Parse(match.Groups["balance"].Value);
+                payment = 0;
+                isOverdue = false;
+                return;
+            }
+
+            Assert.Fail($"The balance and minimum payment result is unreadable: {this.Messages[1]}");
+            throw new NotImplementedException(); // not reachable.
+        }
+
+        public void EnsurePlayerHasNothingMoreToPayThisSeason()
+        {
+            this.GivenPlayerMakesMainMenuChoices("balance and minimum payment");
+            var match = new Regex(@"balance is (?<balance>\d+)g.*minimum payment has been made this season", RegexOptions.IgnoreCase).Match(this.Messages[1]);
             Assert.IsTrue(match.Success, $"The balance and minimum payment result is unreadable: {this.Messages[1]}");
-            Assert.AreEqual(payment, int.Parse(match.Groups["payment"].Value));
-            Assert.AreEqual(balance, int.Parse(match.Groups["balance"].Value));
         }
 
         public void GivenPlayerSetsUpAutopay()

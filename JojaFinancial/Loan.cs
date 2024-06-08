@@ -147,6 +147,9 @@ namespace StardewValleyMods.JojaFinancial
         public int MinimumPayment
             => this.Schedule.GetMinimumPayment(this.GetSeasonsSinceOrigination(), this.RemainingBalance);
 
+        public int PaidThisSeason
+            => this.GetPaidThisSeason() ?? 0;
+
         public int RemainingBalance => this.GetBalance() ?? 0;
 
         public bool TryMakePayment(int amount)
