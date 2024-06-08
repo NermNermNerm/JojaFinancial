@@ -69,14 +69,11 @@ namespace StardewValleyMods.JojaFinancial.Tests
             this.StubMailer.AssertNoMoreMail();
 
             bool hasAutopayThing = mailItem.Message.Contains("automatically", StringComparison.OrdinalIgnoreCase);
-            if ( this.MinimumPayment > 0)
-            {
-                Assert.AreEqual(hasAutopayThing, this.IsOnAutoPay, $"If autopay is on, it should mention that, and otherwise not.  Message:\r\n{mailItem.Message}");
-            }
 
             var match = StatementPaymentRegex.Match(mailItem.Message);
             if (match.Success)
             {
+                Assert.AreEqual(hasAutopayThing, this.IsOnAutoPay, $"If autopay is on, it should mention that, and otherwise not.  Message:\r\n{mailItem.Message}");
                 return int.Parse(match.Groups["payment"].Value);
             }
             else if (NoPaymentDueRegex.IsMatch(mailItem.Message))

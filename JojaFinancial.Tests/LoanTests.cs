@@ -75,6 +75,71 @@ namespace StardewValleyMods.JojaFinancial.Tests
 
 
         [TestMethod]
+        public void EagerBeaver()
+        {
+            // Tests to ensure that stuff works if you pay before the statement
+            this.stubGame1.AdvanceDay(new WorldDate(1, Season.Spring, 5));
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("2-year loan terms");
+
+            this.stubGame1.AdvanceDay();
+
+            // Expect the terms mail to be delivered
+            var paymentDates = this.stubLoan.EnsureTermsHaveBeenDelivered();
+            this.stubGame1.AdvanceDay();
+
+            // Player gets the loan
+            this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Start a 2");
+            this.stubGame1.AdvanceDay();
+            this.stubLoan.EnsureCatalogsHaveBeenDelivered();
+            this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.GivenPlayerSetsUpAutopay();
+
+            const int moreThanEnoughToMakeAPayment = 500000;
+
+            foreach (var payment in paymentDates)
+            {
+                // Pay on the first.
+                if (payment != paymentDates.First())
+                {
+                    this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, 1));
+                }
+
+                this.stubPhoneHandler.GetPaymentAndBalance(out int paymentPerPhone, out int balancePerPhone, out bool isOverdue);
+                Assert.AreEqual(paymentPerPhone, payment.payment);
+                Assert.IsFalse(isOverdue);
+                this.stubGame1.PlayerMoney = moreThanEnoughToMakeAPayment + payment.payment;
+                if (paymentPerPhone > 0)
+                {
+                    this.stubPhoneHandler.GivenPlayerMakesMainMenuChoices("Make a payment", "minimum");
+                }
+                Assert.AreEqual(moreThanEnoughToMakeAPayment, this.stubGame1.PlayerMoney);
+                if (balancePerPhone == paymentPerPhone)
+                {
+                    Assert.AreEqual(payment, paymentDates.Last());
+                    break;
+                }
+
+                this.stubGame1.AdvanceDay(new WorldDate(payment.year, payment.season, Loan.PrepareStatementDayOfSeason + 1));
+                Assert.AreEqual(moreThanEnoughToMakeAPayment, this.stubGame1.PlayerMoney, "AutoPay probably fired when it shouldn't have");
+                this.stubPhoneHandler.GetPaymentAndBalance(out paymentPerPhone, out int _, out isOverdue);
+                Assert.AreEqual(0, paymentPerPhone);
+                Assert.IsFalse(isOverdue);
+
+                int minimumPaymentPerStatement = this.stubLoan.EnsureSeasonalStatementDelivered();
+                Assert.AreEqual(minimumPaymentPerStatement, 0);
+            }
+
+            // Next day the player should get a closure statement.
+            this.stubGame1.AdvanceDay();
+            this.stubLoan.AssertGotPaidInFullMail();
+
+            // Advance a long time and validate that no mail happens.
+            this.stubGame1.AdvanceDay(new WorldDate(4, Season.Spring, 1));
+            this.stubGeneratedMail.AssertNoMoreMail();
+            this.stubPhoneHandler.AssertNothingAvailable();
+        }
+
+        [TestMethod]
         public void BasicThreeYear()
         {
             // Wait for Morris visit
