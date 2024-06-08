@@ -7,6 +7,6 @@
     "UniqueID": "NermNermNerm.JojaFinancial",
     "Description": "Joja Financial offers EZ credit terms to furnish your farmhouse early",
     "EntryDll": "JojaFinancial.dll",
-    "UpdateKeys": [ "GitHub:NermNermNerm/JojaFinancial" ],
+    "UpdateKeys": [ "GitHub:NermNermNerm/JojaFinancial", "Nexus:24958" ],
     "Dependencies": [ ]
 }
