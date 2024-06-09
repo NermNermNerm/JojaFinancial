@@ -15,7 +15,10 @@ in the first year and the bulk is paid for in Fall and Winter of year 2.  You pa
 by phone calls to JojaFinancial.
 
 ## Translating the mods
-Until the mod reaches some basic level of stability, it's going to be English-only.
+
+Translations are welcome!  To make them, start with the `defaults.json` file -- it's important
+that you keep the order of the keys in there, else when you check it in, the automated system
+for generating the i18n files will reorder it, and it'll be difficult to track your changes.
 
 ## Compiling the mods
 Installing stable releases from Nexus Mods is recommended for most users. If you really want to
