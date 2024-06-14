@@ -2,7 +2,7 @@
     "$schema": "https://smapi.io/schemas/manifest.json",
     "Name": "JojaFinancial",
     "Author": "NermNermNerm",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "MinimumApiVersion": "3.14.0",
     "UniqueID": "NermNermNerm.JojaFinancial",
     "Description": "Joja Financial offers EZ credit terms to furnish your farmhouse early",
