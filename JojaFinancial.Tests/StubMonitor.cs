@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using NermNermNerm.Stardew.LocalizeFromSource;
 using StardewModdingAPI;
 using StardewModdingAPI.Framework.Logging;
 
@@ -68,45 +69,18 @@ namespace JojaFinancial.Tests
             // properties.  Lacking a better plan, we'll use reflection to hijack that process
             // and do it under a lock to enable multithreaded test-running, if we ever get that far.
             lock (modEntryLock) {
-                var a = Assembly.Load(new AssemblyName("NermNermNerm.Stardew.LocalizeFromSource"))!;
-                var sdvLocalizeMethodsType = a.GetType("NermNermNerm.Stardew.LocalizeFromSource.SdvLocalize")!;
-                var translatorsField = sdvLocalizeMethodsType.GetField("translators", BindingFlags.NonPublic | BindingFlags.Static)!;
-                var translatorsDict = (System.Collections.IDictionary)(translatorsField.GetValue(null)!);
-                List<KeyValuePair<object,object>>? entries = new List<KeyValuePair<object, object>>();
-                if (translatorsField is not null)
-                {
-                    foreach (object key in translatorsDict.Keys)
-                    {
-                        entries.Add(new KeyValuePair<object, object>(key, translatorsDict[key]!));
-                    }
-                    translatorsDict.Clear();
-                }
-
+                var sdvLocalizeMethodsType = typeof(SdvLocalize);
+                var translatorField = sdvLocalizeMethodsType.GetField("translator", BindingFlags.NonPublic | BindingFlags.Static)!;
+                var oldTranslatorValue = (Translator?)translatorField.GetValue(null);
+                translatorField.SetValue(null, null); // Make it uninitialized so it doesn't complain about being initialized twice.
                 mod.Entry(stubHelper);
-
-                // Undo the creation of the new translator entry so that we don't spend time attempting to re-reading the default.json
-                if (entries is not null && entries.Any())
+                if (oldTranslatorValue != null)
                 {
-                    translatorsDict.Clear();
-                    foreach (var pair in entries)
-                    {
-                        translatorsDict[pair.Key] = pair.Value;
-                    }
+                    // Undo the creation of the new translator entry so that we don't spend time attempting to re-reading the default.json
+                    translatorField.SetValue(mod, oldTranslatorValue);
                 }
-                else
-                {
-                    // This is our first time through, so we need to undo the psuedo-loc setting
-                    object? firstKey = null;
-                    foreach (object key in translatorsDict.Keys)
-                    {
-                        firstKey = key;
-                        break;
-                    }
-                    object translator = translatorsDict[firstKey!]!;
 
-                    prop = translator.GetType().GetProperty("DoPseudoLoc", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    prop!.SetValue(translator, false);
-                }
+                ((Translator)translatorField.GetValue(null)!).DoPseudoLoc = false;
             }
         }
     }
